@@ -15,23 +15,22 @@ import  Link from "@mui/material/Link";
 import Button from "@mui/material/Button";
 
 import { useFormik } from "formik";
+import { useState } from "react";
 
 function LogIn() {
+    const [user, setUser] = useState([]);
+
     const formik = useFormik({
         initialValues: {
-            email: '',
-            password: ''
+          email: '',
+          password: ''
         },
         onSubmit: values => {
-            console.log(values)
-        }
-    });
-    // const handleChange = () => {
+          console.log('Gửi dữ liệu:', values);
+          setUser(values)
+        },
+      });
 
-    // }
-    // const handleSubmit = () => {
-
-    // }
     return (
         <>
             <Box>
@@ -280,7 +279,7 @@ function LogIn() {
                                             <TextField
                                                 onChange={formik.handleChange}
                                                 name='email'
-                                                value='formik.values.email'
+                                                value={formik.values.email}
                                                 placeholder='Email'
                                                 fullWidth
                                                 color='success'
@@ -289,7 +288,7 @@ function LogIn() {
                                         <TextField
                                             onChange={formik.handleChange}
                                             name= 'password'
-                                            value='formik.values.password'
+                                            value={formik.values.password}
                                             placeholder='password'
                                             fullWidth
                                             color='success'
