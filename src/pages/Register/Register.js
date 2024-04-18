@@ -12,17 +12,17 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import AppleIcon from '@mui/icons-material/Apple';
 import LockIcon from '@mui/icons-material/Lock';
 
-import './Regester.css'
+import './Register.css'
 import { Button, Link } from "@mui/material";
 
-function Regester() {
+function Register() {
     return (
         <>
             <Box>
                 <Box
                     sx={{
                         paddingTop: '56px',
-                        backgroundColor: 'rgb(0, 113, 15)'
+                        backgroundColor: 'rgb(0, 113, 15)',
                     }}
                 >
                     <Card sx={{
@@ -72,14 +72,14 @@ function Regester() {
                                 lineHeight: '48px'
                             }}
                         >
-                            Log In
+                            Regester
                         </Typography>
                     </Box>
                 </Box>
                 <Box
                     sx={{
                         backgroundColor: 'rgb(235, 235, 235)',
-                        paddingBottom: '44px'
+                        paddingBottom: '44px',
                     }}
                 >
                     <Box
@@ -281,26 +281,6 @@ function Regester() {
                                                 ),
                                             }}
                                         />
-                                        <Typography
-                                            mb={2}
-                                            mt={1}
-                                            align='right'
-                                            style={{
-                                                fontFamily: 'Roboto, sans-serif',
-                                                fontWeight: '400',
-                                                fontSize: '16px',
-                                                fontStyle: 'normal',
-                                                lineHeight: '24px',
-                                            }}
-                                            sx={{
-                                                color: 'rgb(0, 188, 42)',
-                                                '&:hover': {
-                                                    color: 'rgb(0, 113, 15)'
-                                                },
-                                            }}
-                                        >
-                                            Forgot Password
-                                        </Typography>
                                         <Button
                                             style={{
                                                 width: '100%',
@@ -314,6 +294,7 @@ function Regester() {
                                                 lineHeight: 'normal',
                                             }}
                                             sx={{
+                                                marginTop: '40px',
                                                 backgroundColor: 'rgb(0, 188, 42)',
                                                 color: 'white',
                                                 '&:hover': {
@@ -322,7 +303,7 @@ function Regester() {
                                                 },
                                             }}
                                         >
-                                            LOGIN
+                                            REGISTER
                                         </Button>
                                     </form>
                                     <Typography
@@ -331,14 +312,16 @@ function Regester() {
                                     >
                                         Don’t have an account? &nbsp;
                                         <Link
+                                            href='/auth'
                                             sx={{
+                                                cursor: 'pointer',
                                                 color: 'rgb(0, 188, 42)',
                                                 '&:hover': {
                                                     color: 'rgb(0, 113, 15)',
                                                 },
                                             }}
                                         >
-                                            Register
+                                            Sign In
                                         </Link>
                                     </Typography>
                                 </Box>
@@ -351,4 +334,4 @@ function Regester() {
     )
 }
 
-export default Regester;
+export default Register;
