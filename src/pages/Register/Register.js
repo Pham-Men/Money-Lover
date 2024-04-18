@@ -18,7 +18,7 @@ import './Register.css';
 import { useFormik } from "formik";
 import { useState } from "react";
 
-import { auth } from "../../config";
+import { auth, database } from "../../config";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
 import * as Yup from 'yup';
