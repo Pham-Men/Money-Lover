@@ -6,16 +6,50 @@ import Card from "@mui/material/Card";
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
-
 import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import AppleIcon from '@mui/icons-material/Apple';
 import LockIcon from '@mui/icons-material/Lock';
+import Link from "@mui/material/Link";
+import Button from "@mui/material/Button";
 
-import './Register.css'
-import { Button, Link } from "@mui/material";
+import './Register.css';
+
+import { useFormik } from "formik";
+import { useState } from "react";
+
+import { auth } from "../../config";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+
+import * as Yup from 'yup';
+
+import { useNavigate } from "react-router-dom";
 
 function Register() {
+    const validationSchema = Yup.object().shape({
+        email: Yup.string().email('Email không hợp lệ').required('Email là bắt buộc'),
+        password: Yup.string().min(6, 'Mật khẩu phải có ít nhất 6 ký tự').required('Mật khẩu là bắt buộc'),
+    });
+
+    const [user, setUser] = useState([]);
+    const navigate = useNavigate();
+
+    const formik = useFormik({
+        initialValues: {
+            email: '',
+            password: ''
+        },
+        validationSchema: validationSchema,
+        onSubmit: values => {
+            console.log('Gửi dữ liệu:', values);
+            setUser(values)
+            createUserWithEmailAndPassword(auth, user.email, user.password)
+                .then(() => {navigate('/my-wallets')})
+                .catch((error) => {
+                    console.log(error)
+                });
+        },
+    });
     return (
         <>
             <Box>
@@ -259,18 +293,32 @@ function Register() {
                                 <Box
                                     sx={{ marginRight: '26px' }}
                                 >
-                                    <form>
+                                    <form onSubmit={formik.handleSubmit}>
                                         <Box mb={3}>
                                             <TextField
+                                                type="email"
+                                                name='email'
+                                                onChange={formik.handleChange}
+                                                value={formik.values.email}
                                                 placeholder='Email'
                                                 fullWidth
                                                 color='success'
+                                                error={formik.touched.email && Boolean(formik.errors.email)}
+                                                helperText={formik.touched.email && formik.errors.email}
+                                                required
                                             />
                                         </Box>
                                         <TextField
+                                            type="password"
+                                            name='password'
+                                            onChange={formik.handleChange}
+                                            value={formik.values.password}
                                             placeholder='password'
                                             fullWidth
                                             color='success'
+                                            error={formik.touched.password && Boolean(formik.errors.password)}
+                                            helperText={formik.touched.password && formik.errors.password}
+                                            required
                                             InputProps={{
                                                 endAdornment: (
                                                     <InputAdornment >
@@ -282,6 +330,7 @@ function Register() {
                                             }}
                                         />
                                         <Button
+                                            type='submit'
                                             style={{
                                                 width: '100%',
                                                 padding: '10px 0',
