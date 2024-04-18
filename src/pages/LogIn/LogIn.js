@@ -11,10 +11,27 @@ import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import AppleIcon from '@mui/icons-material/Apple';
 import LockIcon from '@mui/icons-material/Lock';
+import  Link from "@mui/material/Link";
+import Button from "@mui/material/Button";
 
-import { Button, Link } from "@mui/material";
+import { useFormik } from "formik";
 
 function LogIn() {
+    const formik = useFormik({
+        initialValues: {
+            email: '',
+            password: ''
+        },
+        onSubmit: values => {
+            console.log(values)
+        }
+    });
+    // const handleChange = () => {
+
+    // }
+    // const handleSubmit = () => {
+
+    // }
     return (
         <>
             <Box>
@@ -258,15 +275,21 @@ function LogIn() {
                                 <Box
                                     sx={{ marginRight: '26px' }}
                                 >
-                                    <form>
+                                    <form onSubmit={formik.handleSubmit}>
                                         <Box mb={3}>
                                             <TextField
+                                                onChange={formik.handleChange}
+                                                name='email'
+                                                value='formik.values.email'
                                                 placeholder='Email'
                                                 fullWidth
                                                 color='success'
                                             />
                                         </Box>
                                         <TextField
+                                            onChange={formik.handleChange}
+                                            name= 'password'
+                                            value='formik.values.password'
                                             placeholder='password'
                                             fullWidth
                                             color='success'
@@ -298,9 +321,10 @@ function LogIn() {
                                                 },
                                             }}
                                         >
-                                            Forgot Password
+                                            Forgot Password?
                                         </Typography>
                                         <Button
+                                            type='submit'
                                             style={{
                                                 width: '100%',
                                                 padding: '10px 0',
