@@ -11,25 +11,45 @@ import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import AppleIcon from '@mui/icons-material/Apple';
 import LockIcon from '@mui/icons-material/Lock';
-import  Link from "@mui/material/Link";
+import Link from "@mui/material/Link";
 import Button from "@mui/material/Button";
 
 import { useFormik } from "formik";
 import { useState } from "react";
 
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from '../../config';
+
+import { useNavigate } from "react-router-dom";
+
+import * as Yup from 'yup';
+
 function LogIn() {
+    const validationSchema = Yup.object().shape({
+        email: Yup.string().email('Email không hợp lệ').required('Email là bắt buộc'),
+        password: Yup.string().min(6, 'Mật khẩu phải có ít nhất 6 ký tự').required('Mật khẩu là bắt buộc'),
+    });
+
     const [user, setUser] = useState([]);
+    const navigate = useNavigate();
 
     const formik = useFormik({
         initialValues: {
-          email: '',
-          password: ''
+            email: '',
+            password: ''
         },
+        validationSchema: validationSchema,
         onSubmit: values => {
-          console.log('Gửi dữ liệu:', values);
-          setUser(values)
+            setUser(values)
+            signInWithEmailAndPassword(auth, user.email, user.password)
+                .then(() => {
+                    navigate('/')
+                })
+                .catch((error) => {
+                    console.log(error)
+                });
         },
-      });
+    });
 
     return (
         <>
@@ -277,21 +297,29 @@ function LogIn() {
                                     <form onSubmit={formik.handleSubmit}>
                                         <Box mb={3}>
                                             <TextField
+                                                type='email'
                                                 onChange={formik.handleChange}
                                                 name='email'
                                                 value={formik.values.email}
                                                 placeholder='Email'
                                                 fullWidth
                                                 color='success'
+                                                error={formik.touched.email && Boolean(formik.errors.email)}
+                                                helperText={formik.touched.email && formik.errors.email}
+                                                required
                                             />
                                         </Box>
                                         <TextField
+                                            type='password'
                                             onChange={formik.handleChange}
-                                            name= 'password'
+                                            name='password'
                                             value={formik.values.password}
                                             placeholder='password'
                                             fullWidth
                                             color='success'
+                                            error={formik.touched.password && Boolean(formik.errors.password)}
+                                            helperText={formik.touched.password && formik.errors.password}
+                                            required
                                             InputProps={{
                                                 endAdornment: (
                                                     <InputAdornment >

@@ -41,7 +41,6 @@ function Register() {
         },
         validationSchema: validationSchema,
         onSubmit: values => {
-            console.log('Gửi dữ liệu:', values);
             setUser(values)
             createUserWithEmailAndPassword(auth, user.email, user.password)
                 .then(() => {navigate('/my-wallets')})
