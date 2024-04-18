@@ -30,6 +30,8 @@ import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
 import * as Yup from 'yup';
+import SignInApple from "../../components/signInApple";
+import SignInFaceBook from "../../components/signInFaceBook";
 
 function LogIn() {
 
@@ -193,87 +195,8 @@ function LogIn() {
                       Using social networking accounts
                     </Typography>
                     <SignInGoogle />
-                    <Box
-                      sx={{
-                        cursor: "pointer",
-                        marginBottom: "14px",
-                      }}
-                      onClick={handleGoogleSignIn}
-                    >
-                      <Box
-                        sx={{
-                          display: "flex",
-                          padding: "10px 10px",
-                          borderRadius: "6px",
-                          alignItems: "center",
-                          color: "rgb(24, 120, 242)",
-                          border: "2px solid rgb(24, 120, 242)",
-                          "&:hover": {
-                            backgroundColor: "rgb(24, 120, 242)",
-                            color: "white",
-                          },
-                        }}
-                      >
-                        <FacebookIcon
-                          fontSize="small"
-                          sx={{
-                            paddingRight: "12px",
-                          }}
-                        />
-                        <Typography
-                          style={{
-                            fontFamily: "Roboto, sans-serif",
-                            fontWeight: "500",
-                            fontSize: "16px",
-                            fontStyle: "normal",
-                            lineHeight: "19px",
-                          }}
-                        >
-                          Connect with Facebook
-                        </Typography>
-                      </Box>
-                    </Box>
-                    <Box
-                      sx={{
-                        cursor: "pointer",
-                        marginBottom: "14px",
-                      }}
-                      onClick={handleGoogleSignIn}
-                      
-                    >
-                      <Box
-                        sx={{
-                          display: "flex",
-                          padding: "10px 10px",
-                          borderRadius: "6px",
-                          alignItems: "center",
-                          color: "rgb(0, 0, 0)",
-                          border: "2px solid rgb(0, 0, 0)",
-                          "&:hover": {
-                            backgroundColor: "rgb(0, 0, 0)",
-                            color: "white",
-                          },
-                        }}
-                      >
-                        <AppleIcon
-                          fontSize="small"
-                          sx={{
-                            paddingRight: "12px",
-                          }}
-                        />
-                        <Typography
-                          style={{
-                            fontFamily: "Roboto, sans-serif",
-                            fontWeight: "500",
-                            fontSize: "16px",
-                            fontStyle: "normal",
-                            lineHeight: "19px",
-                          }}
-                        >
-                          Sign in with Apple
-                        </Typography>
-                      </Box>
-                    </Box>
+                    <SignInFaceBook/>
+                    <SignInApple/>
                   </Box>
                 </Grid>
                 <Grid item xs={6}>
