@@ -19,6 +19,7 @@ import SignInGoogle from "../../components/signInGoogle";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, provider } from "../../config";
 
+
 import * as Yup from 'yup';
 
 import { useNavigate } from "react-router-dom";
@@ -37,8 +38,6 @@ function Register() {
  
   const [user, setUser] = useState([]);
   const navigate = useNavigate();
-
-
   const formik = useFormik({
     initialValues: {
       email: '',

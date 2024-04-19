@@ -18,9 +18,9 @@ import { useState } from "react";
 
 import SignInGoogle from "../../components/signInGoogle";
 
-
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from '../../config';
+
 
 
 import { useNavigate } from "react-router-dom";
@@ -31,6 +31,7 @@ import SignInFaceBook from "../../components/signInFaceBook";
 
 import { textGrey, primary, hoverGreen, bgGray } from "../../const/constCSS";
 
+<<<<<<< HEAD
 
 const validationSchema = Yup.object().shape({
     email: Yup.string().email('Email không hợp lệ').required('Email là bắt buộc'),
@@ -41,7 +42,6 @@ const validationSchema = Yup.object().shape({
 function LogIn() {
 
     const navigate = useNavigate();
-
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -56,6 +56,7 @@ function LogIn() {
                 })
                 .catch((error) => {
                     alert("Account not exist")
+
                 });
         },
     });
