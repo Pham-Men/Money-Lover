@@ -31,7 +31,6 @@ import SignInFaceBook from "../../components/signInFaceBook";
 
 import { textGrey, primary, hoverGreen, bgGray } from "../../const/constCSS";
 
-<<<<<<< HEAD
 
 const validationSchema = Yup.object().shape({
     email: Yup.string().email('Email không hợp lệ').required('Email là bắt buộc'),

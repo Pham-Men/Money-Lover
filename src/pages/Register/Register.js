@@ -16,8 +16,8 @@ import { useFormik } from "formik";
 import { useState } from "react";
 import SignInGoogle from "../../components/signInGoogle";
 
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { auth, provider } from "../../config";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../config";
 
 
 import * as Yup from 'yup';
@@ -28,6 +28,10 @@ import SignInApple from "../../components/signInApple";
 
 import { bgGray, hoverGreen, primary, textGrey } from "../../const/constCSS";
 
+import {setUserLogin} from '../../redux/slices/authSlice'
+import { useDispatch, useSelector } from "react-redux";
+import { selectorAuth, selectorGoogleAuth } from "../../selector";
+
 const validationSchema = Yup.object().shape({
   email: Yup.string().email('Email không hợp lệ').required('Email là bắt buộc'),
   password: Yup.string().min(6, 'Mật khẩu phải có ít nhất 6 ký tự').required('Mật khẩu là bắt buộc'),
@@ -35,6 +39,13 @@ const validationSchema = Yup.object().shape({
 
 
 function Register() {
+  const result = useSelector(selectorAuth)
+  console.log(result)
+
+  const result2 = useSelector(selectorGoogleAuth)
+  console.log(result2)
+
+  const dispatch = useDispatch()
  
   const [user, setUser] = useState([]);
   const navigate = useNavigate();
@@ -47,7 +58,10 @@ function Register() {
     onSubmit: values => {
       setUser(values)
       createUserWithEmailAndPassword(auth, user.email, user.password)
-        .then(() => { navigate('/my-wallets') })
+        .then((userCredential) => { 
+          navigate('/my-wallets');
+          dispatch(setUserLogin(userCredential.user))
+        })
         .catch((error) => {
           console.log(error)
         });
