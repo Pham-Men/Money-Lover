@@ -33,7 +33,7 @@ import * as Yup from 'yup';
 import SignInApple from "../../components/signInApple";
 import SignInFaceBook from "../../components/signInFaceBook";
 
-import { textGrey, primary, hoverGreen } from "../../const/constCSS";
+import { textGrey, primary, hoverGreen, bgGray } from "../../const/constCSS";
 
 function LogIn() {
 
@@ -155,7 +155,7 @@ function LogIn() {
                 </Box>
                 <Box
                     sx={{
-                        backgroundColor: "rgb(235, 235, 235)",
+                        backgroundColor: `${bgGray}`,
                         paddingBottom: "44px",
                     }}
                 >

@@ -32,7 +32,7 @@ import { useNavigate } from "react-router-dom";
 import SignInFaceBook from "../../components/signInFaceBook";
 import SignInApple from "../../components/signInApple";
 
-import { hoverGreen, primary, textGrey } from "../../const/constCSS";
+import { bgGray, hoverGreen, primary, textGrey } from "../../const/constCSS";
 
 function Register() {
   const validationSchema = Yup.object().shape({
@@ -148,7 +148,7 @@ function Register() {
         </Box>
         <Box
           sx={{
-            backgroundColor: "rgb(235, 235, 235)",
+            backgroundColor: `${bgGray}`,
             paddingBottom: "44px",
           }}
         >
