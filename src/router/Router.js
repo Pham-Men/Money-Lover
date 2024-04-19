@@ -6,18 +6,18 @@ import LogIn from "../pages/LogIn/LogIn";
 import MyWallets from "../pages/MyWallets/MyWallets";
 import LogOut from "../pages/LogOut/LogOut";
 
-function Router () {
-    return (
-        <>
-            <Routes path={'/'} element={<Master/>}>
-                <Route index element={<Home/>}/>
-                <Route path={'/register'} element={<Register/>}/>
-                <Route path={'/auth'} element={<LogIn/>}/>
-                <Route path={'/my-wallets'} element={<MyWallets/>}/>
-                <Route path={'/logout'} element={<LogOut/>}/>
-            </Routes>
-        </>
-    )
+function Router() {
+  return (
+    <>
+      <Routes path={"/"} element={<Master />}>
+        <Route index element={<Home />} />
+        <Route path={"/register"} element={<Register />} />
+        <Route path={"/auth"} element={<LogIn />} />
+        <Route path={"/my-wallets"} element={<MyWallets />} />
+        <Route path={"/logout"} element={<LogOut />} />
+      </Routes>
+    </>
+  );
 }
 
 export default Router;
