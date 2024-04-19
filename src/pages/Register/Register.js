@@ -3,27 +3,23 @@ import Box from "@mui/material/Box";
 import CardMedia from "@mui/material/CardMedia";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
-import IconButton from '@mui/material/IconButton';
-import LockIcon from '@mui/icons-material/Lock';
+import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import LockIcon from "@mui/icons-material/Lock";
 import Link from "@mui/material/Link";
 import Button from "@mui/material/Button";
 
-import './Register.css';
+import "./Register.css";
 
 import { useFormik } from "formik";
 import { useState } from "react";
-
-
 import SignInGoogle from "../../components/signInGoogle";
 
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../config";
 
-import {  createUserWithEmailAndPassword } from "firebase/auth";
-import { auth, provider } from "../../config";
-
-
-import * as Yup from 'yup';
+import * as Yup from "yup";
 
 import { useNavigate } from "react-router-dom";
 import SignInFaceBook from "../../components/signInFaceBook";
@@ -31,28 +27,43 @@ import SignInApple from "../../components/signInApple";
 
 import { bgGray, hoverGreen, primary, textGrey } from "../../const/constCSS";
 
+import { setUserLogin } from "../../redux/slices/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { selectorAuth, selectorGoogleAuth } from "../../selector";
+
+const validationSchema = Yup.object().shape({
+  email: Yup.string().email("Email không hợp lệ").required("Email là bắt buộc"),
+  password: Yup.string()
+    .min(6, "Mật khẩu phải có ít nhất 6 ký tự")
+    .required("Mật khẩu là bắt buộc"),
+});
+
 function Register() {
-  const validationSchema = Yup.object().shape({
-    email: Yup.string().email('Email không hợp lệ').required('Email là bắt buộc'),
-    password: Yup.string().min(6, 'Mật khẩu phải có ít nhất 6 ký tự').required('Mật khẩu là bắt buộc'),
-  });
+  const result = useSelector(selectorAuth);
+  console.log(result);
+
+  const result2 = useSelector(selectorGoogleAuth);
+  console.log(result2);
+
+  const dispatch = useDispatch();
 
   const [user, setUser] = useState([]);
   const navigate = useNavigate();
-
-  
   const formik = useFormik({
     initialValues: {
-      email: '',
-      password: ''
+      email: "",
+      password: "",
     },
     validationSchema: validationSchema,
-    onSubmit: values => {
-      setUser(values)
+    onSubmit: (values) => {
+      setUser(values);
       createUserWithEmailAndPassword(auth, user.email, user.password)
-        .then(() => { navigate('/my-wallets') })
+        .then((userCredential) => {
+          navigate("/my-wallets");
+          dispatch(setUserLogin(userCredential.user));
+        })
         .catch((error) => {
-          console.log(error)
+          console.log(error);
         });
     },
   });
@@ -170,8 +181,8 @@ function Register() {
               <Grid item xs={6}>
                 <Box
                   sx={{
-                    marginLeft: '16px',
-                    marginRight: '16px'
+                    marginLeft: "16px",
+                    marginRight: "16px",
                   }}
                 >
                   <Typography
@@ -190,9 +201,9 @@ function Register() {
                   </Typography>
                   <Box
                     sx={{
-                      borderLeft: '1px solid rgb(224, 224, 224)',
-                      paddingLeft: '16px',
-                      marginLeft: '-16px'
+                      borderLeft: "1px solid rgb(224, 224, 224)",
+                      paddingLeft: "16px",
+                      marginLeft: "-16px",
                     }}
                   >
                     <form onSubmit={formik.handleSubmit}>
