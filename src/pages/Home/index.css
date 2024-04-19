@@ -1,0 +1,12 @@
+.sidebar-item{
+    height: 64px;
+    text-align: center;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+.sidebar-item:hover{
+    background-color: rgba(244, 242, 242, 0.1);
+}
