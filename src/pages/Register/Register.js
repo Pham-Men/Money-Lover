@@ -32,189 +32,196 @@ import { useNavigate } from "react-router-dom";
 import SignInFaceBook from "../../components/signInFaceBook";
 import SignInApple from "../../components/signInApple";
 
+import { hoverGreen, primary, textGrey } from "../../const/constCSS";
+
 function Register() {
-    const validationSchema = Yup.object().shape({
-        email: Yup.string().email('Email không hợp lệ').required('Email là bắt buộc'),
-        password: Yup.string().min(6, 'Mật khẩu phải có ít nhất 6 ký tự').required('Mật khẩu là bắt buộc'),
-    });
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().email('Email không hợp lệ').required('Email là bắt buộc'),
+    password: Yup.string().min(6, 'Mật khẩu phải có ít nhất 6 ký tự').required('Mật khẩu là bắt buộc'),
+  });
 
-    const [user, setUser] = useState([]);
-    const navigate = useNavigate();
+  const [user, setUser] = useState([]);
+  const navigate = useNavigate();
 
-    const handleGoogleSignIn = () => {
-      signInWithPopup(auth, provider)
-        .then((result) => {
-          // This gives you a Google Access Token. You can use it to access the Google API.
-          const credential = GoogleAuthProvider.credentialFromResult(result);
-          const token = credential.accessToken;
-          // The signed-in user info.
-          const user = result.user;
-          console.log(user);
-          navigate("/");
-          // IdP data available using getAdditionalUserInfo(result)
-          // ...
-        })
+  const handleGoogleSignIn = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        // The signed-in user info.
+        const user = result.user;
+        console.log(user);
+        navigate("/");
+        // IdP data available using getAdditionalUserInfo(result)
+        // ...
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+      });
+  };
+
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password: ''
+    },
+    validationSchema: validationSchema,
+    onSubmit: values => {
+      setUser(values)
+      createUserWithEmailAndPassword(auth, user.email, user.password)
+        .then(() => { navigate('/my-wallets') })
         .catch((error) => {
-          // Handle Errors here.
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          // The email of the user's account used.
-          const email = error.customData.email;
-          // The AuthCredential type that was used.
-          const credential = GoogleAuthProvider.credentialFromError(error);
-          // ...
+          console.log(error)
         });
-    };
-
-    const formik = useFormik({
-        initialValues: {
-            email: '',
-            password: ''
-        },
-        validationSchema: validationSchema,
-        onSubmit: values => {
-            setUser(values)
-            createUserWithEmailAndPassword(auth, user.email, user.password)
-                .then(() => {navigate('/my-wallets')})
-                .catch((error) => {
-                    console.log(error)
-                });
-        },
-    });
-    return (
-      <>
-        <Box>
-          <Box
+    },
+  });
+  return (
+    <>
+      <Box>
+        <Box
+          sx={{
+            paddingTop: "56px",
+            backgroundColor: "rgb(0, 113, 15)",
+          }}
+        >
+          <Card
             sx={{
-              paddingTop: "56px",
-              backgroundColor: "rgb(0, 113, 15)",
+              borderRadius: "18px",
+              margin: "0 auto",
+              width: "74px",
             }}
           >
-            <Card
-              sx={{
-                borderRadius: "18px",
-                margin: "0 auto",
-                width: "74px",
-              }}
-            >
-              <CardMedia
-                component="img"
-                height="74px"
-                image="img/logo.png"
-                alt="logo"
-                sx={{ cursor: "pointer" }}
-              />
-            </Card>
+            <CardMedia
+              component="img"
+              height="74px"
+              image="img/logo.png"
+              alt="logo"
+              sx={{ cursor: "pointer" }}
+            />
+          </Card>
+          <Typography
+            align="center"
+            variant="subtitle1"
+            style={{
+              fontFamily: "Roboto, sans-serif",
+              fontSize: "32px",
+              color: "white",
+              fontWeight: "600",
+              paddingtop: "24px",
+              paddingBottom: "32px",
+              cursor: "pointer",
+            }}
+          >
+            Money Lover
+          </Typography>
+          <Box
+            sx={{
+              width: "40%",
+              margin: "0 auto",
+              backgroundColor: "white",
+              paddingTop: "42px",
+              borderTopLeftRadius: "20px",
+              borderTopRightRadius: "20px",
+            }}
+          >
             <Typography
               align="center"
-              variant="subtitle1"
               style={{
                 fontFamily: "Roboto, sans-serif",
+                fontWeight: "700",
                 fontSize: "32px",
-                color: "white",
-                fontWeight: "600",
-                paddingtop: "24px",
-                paddingBottom: "32px",
-                cursor: "pointer",
+                fontStyle: "normal",
+                lineHeight: "48px",
               }}
             >
-              Money Lover
+              Regester
             </Typography>
-            <Box
-              sx={{
-                width: "40%",
-                margin: "0 auto",
-                backgroundColor: "white",
-                paddingTop: "42px",
-                borderTopLeftRadius: "20px",
-                borderTopRightRadius: "20px",
-              }}
-            >
-              <Typography
-                align="center"
-                style={{
-                  fontFamily: "Roboto, sans-serif",
-                  fontWeight: "700",
-                  fontSize: "32px",
-                  fontStyle: "normal",
-                  lineHeight: "48px",
-                }}
-              >
-                Regester
-              </Typography>
-            </Box>
           </Box>
+        </Box>
+        <Box
+          sx={{
+            backgroundColor: "rgb(235, 235, 235)",
+            paddingBottom: "44px",
+          }}
+        >
           <Box
             sx={{
-              backgroundColor: "rgb(235, 235, 235)",
-              paddingBottom: "44px",
+              width: "40%",
+              margin: "0 auto",
+              backgroundColor: "white",
+              borderBottomLeftRadius: "20px",
+              borderBottomRightRadius: "20px",
+              paddingBottom: "40px",
             }}
           >
-            <Box
+            <Grid
+              container
               sx={{
-                width: "40%",
-                margin: "0 auto",
-                backgroundColor: "white",
-                borderBottomLeftRadius: "20px",
-                borderBottomRightRadius: "20px",
-                paddingBottom: "40px",
+                display: "flex",
               }}
             >
-              <Grid
-                container
-                sx={{
-                  display: "flex",
-                }}
-              >
-                <Grid item xs={6}>
-                  <Box
-                    sx={{
-                      marginLeft: "42px",
-                      marginRight: "16px",
+              <Grid item xs={6}>
+                <Box
+                  sx={{
+                    marginLeft: "16px",
+                    marginRight: "16px",
+                  }}
+                >
+                  <Typography
+                    mt={4}
+                    mb={2}
+                    style={{
+                      fontFamily: "Roboto, sans-serif",
+                      fontWeight: "400",
+                      fontSize: "16px",
+                      fontStyle: "normal",
+                      lineHeight: "24px",
+                      color: `${textGrey}`,
                     }}
                   >
-                    <Typography
-                      mt={4}
-                      mb={2}
-                      style={{
-                        fontFamily: "Roboto, sans-serif",
-                        fontWeight: "400",
-                        fontSize: "16px",
-                        fontStyle: "normal",
-                        lineHeight: "24px",
-                        color: "rgb(112, 112, 135)",
-                      }}
-                    >
-                      Using social networking accounts
-                    </Typography>
-                    <SignInGoogle />
-                    <SignInFaceBook />
-                    <SignInApple />
-                  </Box>
-                </Grid>
-                <Grid item xs={6}>
-                  <Box
-                    sx={{
-                      marginLeft: "42px",
-                      marginRight: "16px",
+                    Using social networking accounts
+                  </Typography>
+                  <SignInGoogle />
+                  <SignInFaceBook />
+                  <SignInApple />
+                </Box>
+              </Grid>
+              <Grid item xs={6}>
+                <Box
+                  sx={{
+                    marginLeft: '16px',
+                    marginRight: '16px'
+                  }}
+                >
+                  <Typography
+                    mt={4}
+                    mb={2}
+                    style={{
+                      fontFamily: "Roboto, sans-serif",
+                      fontWeight: "400",
+                      fontSize: "16px",
+                      fontStyle: "normal",
+                      lineHeight: "24px",
+                      color: `${textGrey}`,
                     }}
                   >
-                    <Typography
-                      mt={4}
-                      mb={2}
-                      style={{
-                        fontFamily: "Roboto, sans-serif",
-                        fontWeight: "400",
-                        fontSize: "16px",
-                        fontStyle: "normal",
-                        lineHeight: "24px",
-                        color: "rgb(112, 112, 135)",
-                      }}
-                    >
-                      Using social networking accounts
-                    </Typography>
-                  </Box>
-                  <Box sx={{ marginRight: "26px" }}>
+                    Using Money Lover account
+                  </Typography>
+                  <Box
+                    sx={{
+                      borderLeft: '1px solid rgb(224, 224, 224)',
+                      paddingLeft: '16px',
+                      marginLeft: '-16px'
+                    }}
+                  >
                     <form onSubmit={formik.handleSubmit}>
                       <Box mb={3}>
                         <TextField
@@ -275,10 +282,10 @@ function Register() {
                         }}
                         sx={{
                           marginTop: "40px",
-                          backgroundColor: "rgb(0, 188, 42)",
+                          backgroundColor: `${primary}`,
                           color: "white",
                           "&:hover": {
-                            backgroundColor: "rgb(0, 113, 15)",
+                            backgroundColor: `${hoverGreen}`,
                             color: "white",
                           },
                         }}
@@ -286,29 +293,30 @@ function Register() {
                         REGISTER
                       </Button>
                     </form>
-                    <Typography mt={2} align="center">
-                      Don’t have an account? &nbsp;
-                      <Link
-                        href="/auth"
-                        sx={{
-                          cursor: "pointer",
-                          color: "rgb(0, 188, 42)",
-                          "&:hover": {
-                            color: "rgb(0, 113, 15)",
-                          },
-                        }}
-                      >
-                        Sign In
-                      </Link>
-                    </Typography>
                   </Box>
-                </Grid>
+                  <Typography mt={2} align="center">
+                    Don’t have an account? &nbsp;
+                    <Link
+                      href="/auth"
+                      sx={{
+                        cursor: "pointer",
+                        color: `${primary}`,
+                        "&:hover": {
+                          color: `${hoverGreen}`,
+                        },
+                      }}
+                    >
+                      Sign In
+                    </Link>
+                  </Typography>
+                </Box>
               </Grid>
-            </Box>
+            </Grid>
           </Box>
         </Box>
-      </>
-    );
+      </Box>
+    </>
+  );
 }
 
 export default Register;
