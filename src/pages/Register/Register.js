@@ -6,9 +6,6 @@ import Card from "@mui/material/Card";
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
-import GoogleIcon from '@mui/icons-material/Google';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import AppleIcon from '@mui/icons-material/Apple';
 import LockIcon from '@mui/icons-material/Lock';
 import Link from "@mui/material/Link";
 import Button from "@mui/material/Button";
@@ -17,14 +14,11 @@ import './Register.css';
 
 import { useFormik } from "formik";
 import { useState } from "react";
-
-
 import SignInGoogle from "../../components/signInGoogle";
-
 
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, provider } from "../../config";
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+
 
 import * as Yup from 'yup';
 
@@ -34,40 +28,16 @@ import SignInApple from "../../components/signInApple";
 
 import { bgGray, hoverGreen, primary, textGrey } from "../../const/constCSS";
 
-function Register() {
-  const validationSchema = Yup.object().shape({
-    email: Yup.string().email('Email không hợp lệ').required('Email là bắt buộc'),
-    password: Yup.string().min(6, 'Mật khẩu phải có ít nhất 6 ký tự').required('Mật khẩu là bắt buộc'),
-  });
+const validationSchema = Yup.object().shape({
+  email: Yup.string().email('Email không hợp lệ').required('Email là bắt buộc'),
+  password: Yup.string().min(6, 'Mật khẩu phải có ít nhất 6 ký tự').required('Mật khẩu là bắt buộc'),
+});
 
+
+function Register() {
+ 
   const [user, setUser] = useState([]);
   const navigate = useNavigate();
-
-  const handleGoogleSignIn = () => {
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        // The signed-in user info.
-        const user = result.user;
-        console.log(user);
-        navigate("/");
-        // IdP data available using getAdditionalUserInfo(result)
-        // ...
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
-      });
-  };
-
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -316,7 +286,7 @@ function Register() {
         </Box>
       </Box>
     </>
-  );
+  )
 }
 
 export default Register;

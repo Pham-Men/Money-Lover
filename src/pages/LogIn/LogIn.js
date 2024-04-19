@@ -8,10 +8,8 @@ import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 
 
-import FacebookIcon from '@mui/icons-material/Facebook';
 import LockIcon from '@mui/icons-material/Lock';
-import GoogleIcon from "@mui/icons-material/Google";
-import AppleIcon from "@mui/icons-material/Apple";
+
 import Link from "@mui/material/Link";
 import Button from "@mui/material/Button";
 
@@ -20,10 +18,8 @@ import { useState } from "react";
 
 import SignInGoogle from "../../components/signInGoogle";
 
-
-import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
-import { auth, provider } from '../../config';
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from '../../config';
 
 
 
@@ -35,43 +31,17 @@ import SignInFaceBook from "../../components/signInFaceBook";
 
 import { textGrey, primary, hoverGreen, bgGray } from "../../const/constCSS";
 
+<<<<<<< HEAD
+
+const validationSchema = Yup.object().shape({
+    email: Yup.string().email('Email không hợp lệ').required('Email là bắt buộc'),
+    password: Yup.string().min(6, 'Mật khẩu phải có ít nhất 6 ký tự').required('Mật khẩu là bắt buộc'),
+});
+
+
 function LogIn() {
 
-
-
-    const validationSchema = Yup.object().shape({
-        email: Yup.string().email('Email không hợp lệ').required('Email là bắt buộc'),
-        password: Yup.string().min(6, 'Mật khẩu phải có ít nhất 6 ký tự').required('Mật khẩu là bắt buộc'),
-    });
-
-    const [user, setUser] = useState([]);
     const navigate = useNavigate();
-
-    const handleGoogleSignIn = () => {
-        signInWithPopup(auth, provider)
-            .then((result) => {
-                // This gives you a Google Access Token. You can use it to access the Google API.
-                const credential = GoogleAuthProvider.credentialFromResult(result);
-                const token = credential.accessToken;
-                // The signed-in user info.
-                const user = result.user;
-                console.log(user);
-                navigate("/");
-                // IdP data available using getAdditionalUserInfo(result)
-                // ...
-            })
-            .catch((error) => {
-                // Handle Errors here.
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                // The email of the user's account used.
-                const email = error.customData.email;
-                // The AuthCredential type that was used.
-                const credential = GoogleAuthProvider.credentialFromError(error);
-                // ...
-            });
-    };
-
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -79,13 +49,14 @@ function LogIn() {
         },
         validationSchema: validationSchema,
         onSubmit: values => {
-            setUser(values)
-            signInWithEmailAndPassword(auth, user.email, user.password)
+            signInWithEmailAndPassword(auth, values.email, values.password)
                 .then(() => {
+                    
                     navigate('/')
                 })
                 .catch((error) => {
-                    console.log(error)
+                    alert("Account not exist")
+
                 });
         },
     });
