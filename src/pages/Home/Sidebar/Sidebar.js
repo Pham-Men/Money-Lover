@@ -12,11 +12,16 @@ import styles from "./sidebar.module.scss";
 
 import { useState } from "react";
 
+import { useSelector } from "react-redux";
+
 const Sidebar = () => {
+  
+
   const [activeButton, setActiveButton] = useState(2);
   const handleClick = (index) => {
     setActiveButton(index);
   };
+  const isOpen = useSelector((state) => state.sidebar.isOpen);
 
   return (
     <section className="content">
@@ -29,7 +34,7 @@ const Sidebar = () => {
             {/* <!----------------------navbar------------------------> */}
             <div
               style={{ width: "80px" }}
-              className="p-0 bg-white background-sidebar sidebar z-3 d-flex flex-column align-items-center position-fixed border-right border  top-0 start-0 bottom-0"
+              className={"p-0 bg-white background-sidebar sidebar z-3 d-flex flex-column align-items-center position-fixed border-right border  top-0 start-0 bottom-0 btn " + `${isOpen ? 'd-block': 'd-none'}`+ ' d-md-block'}
             >
               <span className="sidebar-item w-100">
                 <button
