@@ -1,16 +1,54 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
+
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import SearchIcon from "@mui/icons-material/Search";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+
+
+import { useDispatch } from "react-redux";
+import { toggleSidebar } from '../../../redux/slices/sidebarSlice';
 
 const Header = () => {
+    const [showTag, setShowTag] = useState(true);
+
+    useEffect(() => {
+      const handleResize = () => {
+
+        if (window.innerWidth < 768) {
+
+          setShowTag(false);
+        } else {
+          setShowTag(true);
+        }
+      };
+
+      window.addEventListener("resize", handleResize);
+
+
+      handleResize();
+
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
+    }, []);
+
+    const dispatch = useDispatch();
+
+    const ToggleSidebarHandler = () => {
+        dispatch(toggleSidebar());
+        
+    }
     return (
       <div>
         <section className="nav-bar z-2 fixed-top">
-          <nav className="navbar navbar-expand-lg bg-light">
-            <div className="mx-5 container-fluid">
-              <div className="align-items-center mx-3  d-flex justify-content-between">
+          <nav className="position-relative navbar navbar-expand-lg bg-light">
+            <button className="position-fixed me-3 d-md-none top-24px left-5px" onClick={ToggleSidebarHandler}>
+              <MenuOutlinedIcon />
+            </button>
+            <div className="me-3 ms-2 container-fluid">
+              <div className=" align-items-center me-3 ms-5 d-flex justify-content-between">
                 <a className="mx-0 navbar-brand" href="#">
                   <img
                     width="40"
@@ -19,19 +57,11 @@ const Header = () => {
                   />
                 </a>
                 <div className="mx-0 dropdown show d-flex dropdown flex-column jutify-content-between">
-                  <span
-                    className=" p-0 small-text text-secondary "
-                    
-                  >
+                  <span className=" p-0 small-text text-secondary ">
                     Total
                     <ArrowDropDownIcon />
                   </span>
-                  <span
-                    className=" p-0 font-bold small-text "
-                  >
-                    0đ
-                  </span>
-                  
+                  <span className=" p-0 font-bold small-text ">0đ</span>
                 </div>
               </div>
               <button
