@@ -34,3 +34,6 @@ code {
   /* Corrects inability to style clickable `input` types in iOS */
   -webkit-appearance: none;
 }
+a{
+  text-decoration: none;
+}
