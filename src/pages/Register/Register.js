@@ -13,7 +13,6 @@ import Button from "@mui/material/Button";
 import "./Register.css";
 
 import { useFormik } from "formik";
-import { useState } from "react";
 import SignInGoogle from "../../components/signInGoogle";
 
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -29,7 +28,7 @@ import { bgGray, hoverGreen, primary, textGrey } from "../../const/constCSS";
 
 import { setUserLogin } from "../../redux/slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { selectorAuth, selectorGoogleAuth } from "../../selector";
+import { selectorAuth } from "../../selector";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().email("Email không hợp lệ").required("Email là bắt buộc"),
@@ -42,12 +41,8 @@ function Register() {
   const result = useSelector(selectorAuth);
   console.log(result);
 
-  const result2 = useSelector(selectorGoogleAuth);
-  console.log(result2);
-
   const dispatch = useDispatch();
 
-  const [user, setUser] = useState([]);
   const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
@@ -56,8 +51,7 @@ function Register() {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      setUser(values);
-      createUserWithEmailAndPassword(auth, user.email, user.password)
+      createUserWithEmailAndPassword(auth, values.email, values.password)
         .then((userCredential) => {
           navigate("/my-wallets");
           dispatch(setUserLogin(userCredential.user));

@@ -1,14 +1,17 @@
 import React from 'react';
 
 import { auth, provider } from "../config";
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import FacebookIcon from "@mui/icons-material/Google";
+import { signInWithPopup } from "firebase/auth";
+import FacebookIcon from "@mui/icons-material/Facebook";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { setUserLogin } from '../redux/slices/authSlice';
 
 const SignInFaceBook = () => {
-    const navigate = useNavigate();
+  const ditpatch = useDispatch();
+  const navigate = useNavigate();
 
     const handleGoogleSignIn = () => {
       signInWithPopup(auth, provider)
@@ -25,18 +28,7 @@ const SignInFaceBook = () => {
         })
         .catch((error) => {
           // Handle Errors here.
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          // The email of the user's account used.
-          const email = error.customData.email;
-          // The AuthCredential type that was used.
-          const credential = GoogleAuthProvider.credentialFromError(error);
-
-          console.log(errorCode);
-          console.log(errorMessage);
-          console.log(email);
-          console.log(credential);
-          // ...
+          console.log(error);
         });
     };
     return (
