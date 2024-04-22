@@ -9,11 +9,11 @@ export default function Dashboard() {
 
 
   return (
-    <>
+    <div className="Home">
       {/* // <!----------------------navbar------------------------> */}
       <Header />
       {/* // <!----------------------sidebar------------------------> */}
       <Sidebar />
-    </>
+    </div>
   );
 }
