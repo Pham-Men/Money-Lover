@@ -13,7 +13,6 @@ import Link from "@mui/material/Link";
 import Button from "@mui/material/Button";
 
 import { useFormik } from "formik";
-import { useState } from "react";
 
 import SignInGoogle from "../../components/signInGoogle";
 
@@ -27,6 +26,11 @@ import SignInApple from "../../components/signInApple";
 import SignInFaceBook from "../../components/signInFaceBook";
 
 import { textGrey, primary, hoverGreen, bgGray } from "../../const/constCSS";
+import { useDispatch } from "react-redux";
+import { setUserLogin } from "../../redux/slices/authSlice";
+
+import { selectorAuth } from "../../selector";
+import { useSelector } from "react-redux";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().email("Email không hợp lệ").required("Email là bắt buộc"),
@@ -36,6 +40,10 @@ const validationSchema = Yup.object().shape({
 });
 
 function LogIn() {
+  const result = useSelector(selectorAuth);
+  console.log(result);
+
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
@@ -45,10 +53,11 @@ function LogIn() {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       signInWithEmailAndPassword(auth, values.email, values.password)
-        .then(() => {
-          navigate("/");
-        })
-        .catch((error) => {
+      .then((userCredential) => {
+        navigate("/my-wallets");
+        dispatch(setUserLogin(userCredential.user));
+      })
+        .catch(() => {
           alert("Account not exist");
         });
     },
