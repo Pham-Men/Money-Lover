@@ -1,37 +1,27 @@
 
 import React from "react";
 import { auth, provider } from "../config";
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import AppleIcon from "@mui/icons-material/Google";
+import { signInWithPopup } from "firebase/auth";
+import AppleIcon from "@mui/icons-material/Apple";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { setUserLogin } from '../redux/slices/authSlice';
 
 const SignInApple = () => {
+  const ditpatch = useDispatch();
   const navigate = useNavigate();
 
   const handleGoogleSignIn = () => {
     signInWithPopup(auth, provider)
-      .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        // The signed-in user info.
-        const user = result.user;
-        console.log(user);
-        navigate("/");
-        // IdP data available using getAdditionalUserInfo(result)
-        // ...
-      })
+    .then((result) => {
+      const user = result.user;
+      ditpatch(setUserLogin(user))
+      navigate("/");
+    })
       .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
+        console.log(error)
       });
   };
   return (
@@ -58,7 +48,7 @@ const SignInApple = () => {
         onClick={() => handleGoogleSignIn()}
       >
         <AppleIcon
-          fontSize="small"
+          fontSize="large"
           sx={{
             paddingRight: "12px",
           }}

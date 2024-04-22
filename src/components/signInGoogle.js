@@ -48,7 +48,7 @@ const SignInGoogle = () => {
           }}
         >
           <GoogleIcon
-            fontSize="small"
+            fontSize="large"
             sx={{
               paddingRight: "12px",
             }}
