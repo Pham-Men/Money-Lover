@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
-import { setUserLoginByGoogle } from '../redux/slices/googleAuthSlice'
+import { setUserLogin } from '../redux/slices/authSlice';
 
 const SignInGoogle = () => {
 
@@ -17,8 +17,7 @@ const SignInGoogle = () => {
       signInWithPopup(auth, provider)
         .then((result) => {
           const user = result.user;
-          console.log(user);
-          ditpatch(setUserLoginByGoogle(user))
+          ditpatch(setUserLogin(user))
           navigate("/");
         })
         .catch((error) => {
