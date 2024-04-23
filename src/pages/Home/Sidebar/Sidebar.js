@@ -24,8 +24,8 @@ const Sidebar = () => {
   const isOpen = useSelector((state) => state.sidebar.isOpen);
 
   return (
-    <section className="content">
-      <div className="container">
+    <section className=" content ">
+      <div className=" container">
         <div
           styles={{ height: "100vh" }}
           className={"row " + styles["row-grid"]}
@@ -34,11 +34,15 @@ const Sidebar = () => {
             {/* <!----------------------navbar------------------------> */}
             <div
               style={{ width: "80px" }}
-              className={"p-0 bg-white background-sidebar sidebar z-3 d-flex flex-column align-items-center position-fixed border-right border  top-0 start-0 bottom-0 btn " + `${isOpen ? 'd-block': 'd-none'}`+ ' d-md-block'}
+              className={
+                "p-0 bg-white h-100 sidebar z-3 d-flex flex-column align-items-center position-fixed border-right border top-0 start-0 bottom-0 text-center " +
+                `${isOpen ? "d-block" : "d-none"}` +
+                " d-md-block"
+              }
             >
-              <span className="sidebar-item w-100">
+              <span className={styles["sidebar-item"] + " py-3 d-block w-100 p-3"}>
                 <button
-                  class=" btn"
+                  className=" btn"
                   type="button"
                   data-bs-toggle="offcanvas"
                   data-bs-target="#sidebar2"
@@ -46,18 +50,35 @@ const Sidebar = () => {
                   <MenuOutlinedIcon />
                 </button>
               </span>
-              <span className="text-success sidebar-item w-100">
+              <span
+                className={styles["sidebar-item-menu"] +
+                  " text-success border-bottom mt-3 py-5 gap-2 border-success d-block flex-column d-flex align-items-center sidebar-item w-100"
+                }
+              >
                 <AccountBalanceWalletOutlinedIcon />
+                <small>Transactions</small>
               </span>
-              <span className="sidebar-item w-100">
+              <span
+                className={
+                  styles["sidebar-item"] +
+                  " py-5 gap-2 d-block flex-column d-flex align-items-center sidebar-item w-100"
+                }
+              >
                 <LocalGroceryStoreOutlinedIcon />
+                <small>Transactions</small>
               </span>
-              <span className="sidebar-item w-100">
+              <span
+                className={
+                  styles["sidebar-item"] +
+                  " py-5 d-block flex-column d-flex align-items-center gap-2 sidebar-item w-100"
+                }
+              >
                 <HelpOutlineOutlinedIcon />
+                <small>Transactions</small>
               </span>
             </div>
           </div>
-          <div className={"mt-5 col-8"}>
+          <div className={styles["contentHome"] + " mt-5 col-8 "}>
             <div
               className={
                 styles["content"] +

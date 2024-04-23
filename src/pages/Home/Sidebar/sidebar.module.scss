@@ -154,5 +154,18 @@
         text-align: center;
     }
 }
+.contentHome{
+    height:100vh;
+}
+.sidebar-item{
+    font-size: 14px;
+    color:rgb(171, 171, 171);
+    &:hover{
+        background-color: rgb(222, 221, 221);
+    }
+}
+.sidebar-item-menu{
+    font-size: 14px;
+}
 
 
