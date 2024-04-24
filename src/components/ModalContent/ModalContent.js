@@ -7,6 +7,7 @@ import { hoverGreen, primary, textGrey } from '../../const/constCSS';
 
 import TextField from '@mui/material/TextField';
 import { useFormik } from 'formik';
+import { useState } from 'react';
 
 // import { firebaseConfig } from '../../config';
 
@@ -27,6 +28,7 @@ function ModalContent(prop) {
             
         }
     })
+
     return (
         <>
             <Box

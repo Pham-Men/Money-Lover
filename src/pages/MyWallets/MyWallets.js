@@ -6,8 +6,50 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import { bgGray } from "../../const/constCSS";
 import Wallet from '../../components/Wallet/Wallet';
+import CreateMyWallets from '../../components/CreateMyWallets/CreateMyWallets';
+import { firebaseConfig } from '../../config';
+
+import { useEffect,} from 'react';
+
+import axios from 'axios'
+
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserData } from '../../redux/slices/dataUserSlice';
+import { selectorAuth, selectordataUser } from '../../selector';
+import { useNavigate } from 'react-router-dom';
 
 function MyWallets() {
+
+    const userAuth = useSelector(selectorAuth);
+    console.log(userAuth);
+
+    const dataUser = useSelector(selectordataUser);
+
+    const dispatch = useDispatch();
+
+    const collectionName = "my-wallet/9x5TTyglHtu8F5OFvhR1";
+
+    const firestoreUrl =
+        `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/${collectionName}`;
+
+    useEffect(() => {
+        axios.get(firestoreUrl)
+            .then(response => {
+                const data = response.data.fields;
+                dispatch(setUserData(data))
+                console.log(data)
+
+            })
+            .catch(error => {
+                console.error("Error fetching data from Firestore:", error);
+            });
+    }, [])
+
+    const navigate = useNavigate();
+
+    const toHome = () => {
+        navigate('/')
+    }
     return (
         <>
             <Box
@@ -20,29 +62,40 @@ function MyWallets() {
                     sx={{
                         height: '62px',
                         backgroundColor: 'white',
-                        display: 'flex',
-                        alignContent: 'center'
                     }}
                 >
-                    <ArrowBackIcon 
+                    <Box
+                        onClick={toHome}
                         sx={{
-                            marginLeft: '80px',
-                            marginRight: '36px'
-                        }}
-                    />
-                    <Typography
-                        sx={{
-                            fontFamily: 'Roboto, sans-serif',
-                            fontSize: '20px',
-                            fontWeight: '500',
-                            color: 'black',
-                            style: 'normal'
+                            height: '62px',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center'
                         }}
                     >
-                        My Wallets
-                    </Typography>
+                        <Box>
+                            <ArrowBackIcon
+                                sx={{
+                                    marginLeft: '80px',
+                                    marginRight: '36px'
+                                }}
+                            />
+                        </Box>
+                        <Typography
+                            sx={{
+                                fontFamily: 'Roboto, sans-serif',
+                                fontSize: '20px',
+                                fontWeight: '500',
+                                color: 'black',
+                                style: 'normal'
+                            }}
+                        >
+                            My Wallets
+                        </Typography>
+                    </Box>
                 </Breadcrumbs>
-                <Wallet/>
+                {/* <Wallet dataUser={dataUser}/> */}
+                <CreateMyWallets />
             </Box>
         </>
     )
