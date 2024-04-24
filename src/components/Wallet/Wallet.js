@@ -4,16 +4,27 @@ import CardMedia from '@mui/material/CardMedia';
 import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
+import Avatar from '@mui/material/Avatar';
 
 import CloseIcon from '@mui/icons-material/Close';
 
-import { hoverGreen, primary, textGrey } from '../../const/constCSS';
+import { primary, textGrey } from '../../const/constCSS';
+import ModalContent from '../ModalContent/ModalContent';
+import { firebaseConfig } from '../../config';
 
-import { useState } from 'react';
-import { Avatar, TextField } from '@mui/material';
-import { TextFields } from '@mui/icons-material';
+import { useEffect, useState } from 'react';
+
+import axios from 'axios'
+
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserData } from '../../redux/slices/dataUserSlice';
+import { selectordataUser } from '../../selector';
 
 function Wallet() {
+    const dataUser = useSelector(selectordataUser);
+
+    const dispatch = useDispatch();
+
     const [display, setDisplay] = useState(false)
 
     const handleDetail = () => {
@@ -23,6 +34,25 @@ function Wallet() {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+
+    useEffect(() => {
+
+        const collectionName = "my-wallet/nuvUCQTuLh1Mh63CBaQM";
+
+        const firestoreUrl = 
+        `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/${collectionName}`;
+
+        axios.get(firestoreUrl)
+            .then(response => {
+                const data = response.data.fields;
+                dispatch(setUserData(data))
+                console.log(data)
+
+            })
+            .catch(error => {
+                console.error("Error fetching data from Firestore:", error);
+            });
+    }, [])
 
     return (
         <>
@@ -87,29 +117,31 @@ function Wallet() {
                             }}
                             image='img/iconWallet.png'
                         />
-                        <Box>
-                            <Typography
-                                sx={{
-                                    fontFamily: 'roboto, sans-serif',
-                                    fontSize: '12px',
-                                    fontWeight: '400',
-                                    color: `${textGrey}`,
-                                    style: 'normal',
-                                }}
-                            >
-                                1000
-                            </Typography>
-                            <Typography
-                                sx={{
-                                    fontFamily: 'roboto, sans-serif',
-                                    fontSize: '14px',
-                                    fontWeight: '500',
-                                    style: 'normal',
-                                }}
-                            >
-                                Việt Nam Đồng
-                            </Typography>
-                        </Box>
+                        {dataUser &&
+                            <Box>
+                                <Typography
+                                    sx={{
+                                        fontFamily: 'roboto, sans-serif',
+                                        fontSize: '12px',
+                                        fontWeight: '400',
+                                        color: `${textGrey}`,
+                                        style: 'normal',
+                                    }}
+                                >
+                                    {dataUser.totalMoney.integerValue}
+                                </Typography>
+                                <Typography
+                                    sx={{
+                                        fontFamily: 'roboto, sans-serif',
+                                        fontSize: '14px',
+                                        fontWeight: '500',
+                                        style: 'normal',
+                                    }}
+                                >
+                                    {dataUser.currency.stringValue}
+                                </Typography>
+                            </Box>
+                        }
                     </Box>
                 </Box>
                 {display &&
@@ -179,29 +211,31 @@ function Wallet() {
                                 }}
                                 image='img/iconWallet.png'
                             />
-                            <Box>
-                                <Typography
-                                    sx={{
-                                        fontFamily: 'roboto, sans-serif',
-                                        fontSize: '14px',
-                                        fontWeight: '400',
-                                        color: `${textGrey}`,
-                                        style: 'normal',
-                                    }}
-                                >
-                                    1000
-                                </Typography>
-                                <Typography
-                                    sx={{
-                                        fontFamily: 'roboto, sans-serif',
-                                        fontSize: '24px',
-                                        fontWeight: '400',
-                                        style: 'normal',
-                                    }}
-                                >
-                                    Việt Nam Đồng
-                                </Typography>
-                            </Box>
+                            {dataUser && 
+                                <Box>
+                                    <Typography
+                                        sx={{
+                                            fontFamily: 'roboto, sans-serif',
+                                            fontSize: '14px',
+                                            fontWeight: '400',
+                                            color: `${textGrey}`,
+                                            style: 'normal',
+                                        }}
+                                    >
+                                        {dataUser.totalMoney.integerValue}
+                                    </Typography>
+                                    <Typography
+                                        sx={{
+                                            fontFamily: 'roboto, sans-serif',
+                                            fontSize: '24px',
+                                            fontWeight: '400',
+                                            style: 'normal',
+                                        }}
+                                    >
+                                        {dataUser.currency.stringValue}
+                                    </Typography>
+                                </Box>
+                            }
                         </Box>
 
                         <Box
@@ -225,32 +259,34 @@ function Wallet() {
                             >
                                 User
                             </Typography>
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    alignContent: 'center',
+                            {dataUser && 
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        alignContent: 'center',
 
-                                }}
-                            >
-                                <Avatar
-                                    sx={{
-                                        backgroundColor: `${primary}`
                                     }}
                                 >
-                                    M
-                                </Avatar>
-                                <Typography
-                                    sx={{
-                                        fontFamily: 'roboto, sans-serif',
-                                        fontSize: '14px',
-                                        fontWeight: '500',
-                                        style: 'normal',
-                                        paddingLeft: '20px'
-                                    }}
-                                >
-                                    phamthimen002@gmail.com
-                                </Typography>
-                            </Box>
+                                    <Avatar
+                                        sx={{
+                                            backgroundColor: `${primary}`
+                                        }}
+                                    >
+                                        {dataUser.email.stringValue[0].toUpperCase()}
+                                    </Avatar>
+                                    <Typography
+                                        sx={{
+                                            fontFamily: 'roboto, sans-serif',
+                                            fontSize: '14px',
+                                            fontWeight: '500',
+                                            style: 'normal',
+                                            paddingLeft: '20px'
+                                        }}
+                                    >
+                                        {dataUser.email.stringValue}
+                                    </Typography>
+                                </Box>
+                            }
                         </Box>
 
                         <Box
@@ -269,7 +305,7 @@ function Wallet() {
                                 <Box>
                                     <Checkbox
                                         sx={{
-                                            color: `${primary}`
+                                            color: `${primary}`,
                                         }}
                                     />
                                 </Box>
@@ -377,122 +413,7 @@ function Wallet() {
                             open={open}
                             onClose={handleClose}
                         >
-                            <Box
-                                sx={{
-                                    width: '496px',
-                                    height: '382px',
-                                    position: 'absolute',
-                                    top: '50%',
-                                    left: '50%',
-                                    transform: 'translate(-50%, -50%)',
-                                    backgroundColor: 'white',
-                                    borderRadius: '8px'
-                                }}
-                            >
-                                <Typography
-                                    sx={{
-                                        fontFamily: 'roboto, sans-serif',
-                                        fontSize: '20px',
-                                        fontWeight: '500',
-                                        style: 'normal',
-                                        padding: '20px'
-                                    }}
-                                >
-                                    Adjust Balance
-                                </Typography>
-                                <Box
-                                    sx={{
-                                        padding: '20px 0',
-                                        display: 'flex',
-                                        cursor: 'pointer',
-                                        paddingLeft: '20px',
-                                    }}
-                                >
-                                    <CardMedia
-                                        component='img'
-                                        sx={{
-                                            height: '38px',
-                                            width: '38px',
-                                            marginRight: '20px'
-                                        }}
-                                        image='img/iconWallet.png'
-                                    />
-                                    <Box>
-                                        <Typography
-                                            sx={{
-                                                fontFamily: 'roboto, sans-serif',
-                                                fontSize: '12px',
-                                                fontWeight: '400',
-                                                color: `${textGrey}`,
-                                                style: 'normal',
-                                            }}
-                                        >
-                                            1000
-                                        </Typography>
-                                        <Typography
-                                            sx={{
-                                                fontFamily: 'roboto, sans-serif',
-                                                fontSize: '14px',
-                                                fontWeight: '500',
-                                                style: 'normal',
-                                            }}
-                                        >
-                                            Việt Nam Đồng
-                                        </Typography>
-                                    </Box>
-                                </Box>
-                                <Box
-                                    sx={{
-                                        padding: '0 20px',
-                                    }}
-                                >
-                                    <Typography
-                                        sx={{
-                                            fontFamily: 'roboto, sans-serif',
-                                            fontSize: '12px',
-                                            fontWeight: '400',
-                                            color: `${textGrey}`,
-                                            style: 'normal',
-                                        }}
-                                    >
-                                        Enter current balance of this wallet
-                                    </Typography>
-                                    <TextField fullWidth color="success"/>
-                                </Box>
-                                <Box
-                                    display='flex'
-                                    justifyContent='end'
-
-                                >
-                                    <Button
-                                        sx={{
-                                            color: `${primary}`,
-                                            backgroundColor: 'rgb(230, 230, 230)',
-                                            margin: '36px',
-                                            '&:hover': {
-                                                backgroundColor: 'rgb(216, 233, 220)',
-                                                color: `${primary}`
-                                            }
-                                        }}
-                                    >
-                                        cancel
-                                    </Button>
-                                    <Button
-                                        sx={{
-                                            backgroundColor: `${primary}`,
-                                            color: 'white',
-                                            margin: '36px',
-                                            '&:hover': {
-                                                backgroundColor: `${hoverGreen}`,
-                                                color: 'white'
-                                            }
-                                        }}
-                                        type='submit'
-                                    >
-                                        done
-                                    </Button>
-                                </Box>
-                            </Box>
+                            <ModalContent datauser={dataUser}/>
                         </Modal>
 
                     </Box>
