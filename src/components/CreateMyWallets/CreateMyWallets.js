@@ -9,6 +9,15 @@ import Button from '@mui/material/Button'
 import { useState } from 'react';
 
 import { hoverGreen, primary } from '../../const/constCSS';
+import { firebaseConfig } from '../../config';
+
+import { useFormik } from 'formik';
+
+import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { selectorAuth } from '../../selector';
+
+
 
 const images = [
     { value: 'image', label: <img src="img/iconWallet.png" alt="Image" style={{ width: '26px' }} /> },
@@ -22,12 +31,46 @@ const images = [
 ];
 
 const currencys = [
-    { value: 'image1', label: <img src="img/ic_currency_vnd.png" alt="Image 1" style={{ width: '26px' }} />, text: 'Việt Nam Đồng' },
-    { value: 'image2', label: <img src="img/ic_currency_usd.png" alt="Image 2" style={{ width: '26px' }} />, text: 'United States Dollar' },
-    { value: 'image3', label: <img src="img/ic_currency_krw.png" alt="Image 3" style={{ width: '26px' }} />, text: 'Won' },
-    { value: 'image4', label: <img src="img/ic_currency_cny.png" alt="Image 4" style={{ width: '26px' }} />, text: 'Yuan Renminbi' },
+    { value: 'Việt Nam Đồng', label: <img src="img/ic_currency_vnd.png" alt="Image 1" style={{ width: '26px' }} />, text: 'Việt Nam Đồng' },
+    { value: 'United States Dollar', label: <img src="img/ic_currency_usd.png" alt="Image 2" style={{ width: '26px' }} />, text: 'United States Dollar' },
+    { value: 'Won', label: <img src="img/ic_currency_krw.png" alt="Image 3" style={{ width: '26px' }} />, text: 'Won' },
+    { value: 'Yuan Renminbi', label: <img src="img/ic_currency_cny.png" alt="Image 4" style={{ width: '26px' }} />, text: 'Yuan Renminbi' },
 ];
+
 function CreateMyWallets() {
+    const userAuth = useSelector(selectorAuth);
+    console.log(userAuth);
+
+    const collectionName = "my-wallet";
+
+    const firestoreUrl =
+        `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/${collectionName}`;
+
+    const formik = useFormik({
+        initialValues: {
+            name: '',
+            totalMoney: '',
+            currency: ''
+        },
+        onSubmit: (values) => {
+            console.log(values)
+            axios.post(firestoreUrl, {
+                fields: {
+                    name: { 'stringValue': values.name },
+                    totalMoney: { 'integerValue': values.totalMoney },
+                    currency: { 'stringValue': values.currency },
+                    uid: {'stringValue': userAuth.uid}
+                }
+            }
+            )
+                .then(response => {
+                    console.log(response)
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        }
+    })
 
     const [selectedImage, setSelectedImage] = useState('image');
 
@@ -35,15 +78,9 @@ function CreateMyWallets() {
         setSelectedImage(event.target.value);
     };
 
-    const [selectedCurremcy, setSelectedcurrency] = useState('image1');
-
-    const handleChangeCurrency = (event) => {
-        setSelectedcurrency(event.target.value);
-    };
-
     return (
         <>
-            <form>
+            <form onSubmit={formik.handleSubmit}>
                 <Box
                     sx={{
                         width: '500px',
@@ -102,7 +139,13 @@ function CreateMyWallets() {
                                 width: '80%',
                             }}
                         >
-                            <TextField placeholder='Your wallet name' fullWidth />
+                            <TextField
+                                onChange={formik.handleChange}
+                                name='name'
+                                value={formik.values.name}
+                                placeholder='Your wallet name'
+                                fullWidth
+                            />
                         </Box>
                     </Box>
                     <Box
@@ -122,10 +165,9 @@ function CreateMyWallets() {
                                 sx={{
                                     width: '100%'
                                 }}
-                                labelId="image-select-label"
-                                id="image-select"
-                                value={selectedCurremcy}
-                                onChange={handleChangeCurrency}
+                                name='currency'
+                                value={formik.values.currency}
+                                onChange={formik.handleChange}
                             >
                                 {currencys.map((currency) => (
                                     <MenuItem key={currency.value} value={currency.value}>
@@ -134,9 +176,12 @@ function CreateMyWallets() {
                                 ))}
                             </Select>
                         </Box>
-                        <TextField 
-                        sx={{ width: '40%' }} 
-                        placeholder='initial Balance'
+                        <TextField
+                            onChange={formik.handleChange}
+                            name='totalMoney'
+                            value={formik.values.totalMoney}
+                            sx={{ width: '40%' }}
+                            placeholder='initial Balance'
                         />
                     </Box>
                     <Box sx={{

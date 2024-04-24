@@ -10,20 +10,15 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import { primary, textGrey } from '../../const/constCSS';
 import ModalContent from '../ModalContent/ModalContent';
-import { firebaseConfig } from '../../config';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { selectorAuth } from '../../selector';
 
-import axios from 'axios'
+function Wallet(prop) {
 
-import { useDispatch, useSelector } from 'react-redux';
-import { setUserData } from '../../redux/slices/dataUserSlice';
-import { selectordataUser } from '../../selector';
-
-function Wallet() {
-    const dataUser = useSelector(selectordataUser);
-
-    const dispatch = useDispatch();
+    const result = useSelector(selectorAuth);
+    console.log(result);
 
     const [display, setDisplay] = useState(false)
 
@@ -34,25 +29,6 @@ function Wallet() {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-
-    useEffect(() => {
-
-        const collectionName = "my-wallet/nuvUCQTuLh1Mh63CBaQM";
-
-        const firestoreUrl = 
-        `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/${collectionName}`;
-
-        axios.get(firestoreUrl)
-            .then(response => {
-                const data = response.data.fields;
-                dispatch(setUserData(data))
-                console.log(data)
-
-            })
-            .catch(error => {
-                console.error("Error fetching data from Firestore:", error);
-            });
-    }, [])
 
     return (
         <>
@@ -117,7 +93,7 @@ function Wallet() {
                             }}
                             image='img/iconWallet.png'
                         />
-                        {dataUser &&
+                        {prop &&
                             <Box>
                                 <Typography
                                     sx={{
@@ -128,7 +104,7 @@ function Wallet() {
                                         style: 'normal',
                                     }}
                                 >
-                                    {dataUser.totalMoney.integerValue}
+                                    {prop.dataUser.totalMoney.integerValue}
                                 </Typography>
                                 <Typography
                                     sx={{
@@ -138,7 +114,7 @@ function Wallet() {
                                         style: 'normal',
                                     }}
                                 >
-                                    {dataUser.currency.stringValue}
+                                    {prop.dataUser.currency.stringValue}
                                 </Typography>
                             </Box>
                         }
@@ -211,7 +187,7 @@ function Wallet() {
                                 }}
                                 image='img/iconWallet.png'
                             />
-                            {dataUser && 
+                            {prop && 
                                 <Box>
                                     <Typography
                                         sx={{
@@ -222,7 +198,7 @@ function Wallet() {
                                             style: 'normal',
                                         }}
                                     >
-                                        {dataUser.totalMoney.integerValue}
+                                        {prop.dataUser.totalMoney.integerValue}
                                     </Typography>
                                     <Typography
                                         sx={{
@@ -232,7 +208,7 @@ function Wallet() {
                                             style: 'normal',
                                         }}
                                     >
-                                        {dataUser.currency.stringValue}
+                                        {prop.dataUser.currency.stringValue}
                                     </Typography>
                                 </Box>
                             }
@@ -259,7 +235,7 @@ function Wallet() {
                             >
                                 User
                             </Typography>
-                            {dataUser && 
+                            {prop && 
                                 <Box
                                     sx={{
                                         display: 'flex',
@@ -272,7 +248,7 @@ function Wallet() {
                                             backgroundColor: `${primary}`
                                         }}
                                     >
-                                        {dataUser.email.stringValue[0].toUpperCase()}
+                                        {result.email[0].toUpperCase()}
                                     </Avatar>
                                     <Typography
                                         sx={{
@@ -283,7 +259,7 @@ function Wallet() {
                                             paddingLeft: '20px'
                                         }}
                                     >
-                                        {dataUser.email.stringValue}
+                                        {result.email}
                                     </Typography>
                                 </Box>
                             }
@@ -413,7 +389,7 @@ function Wallet() {
                             open={open}
                             onClose={handleClose}
                         >
-                            <ModalContent datauser={dataUser}/>
+                            <ModalContent datauser={prop.dataUser}/>
                         </Modal>
 
                     </Box>

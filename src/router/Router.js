@@ -6,8 +6,6 @@ import LogIn from "../pages/LogIn/LogIn";
 import MyWallets from "../pages/MyWallets/MyWallets";
 import LogOut from "../pages/LogOut/LogOut";
 import Categories from "../pages/Categories/Categories";
-// import CreateMyWallets from "../components/CreateMyWallets/CreateMyWallets";
-// import Wallet from "../components/Wallet/Wallet";
 
 function Router() {
   return (
