@@ -41,7 +41,7 @@ const validationSchema = Yup.object().shape({
 
 function LogIn() {
   const result = useSelector(selectorAuth);
-  console.log(result);
+  console.log(result,);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -54,6 +54,7 @@ function LogIn() {
     onSubmit: (values) => {
       signInWithEmailAndPassword(auth, values.email, values.password)
       .then((userCredential) => {
+        
         navigate("/my-wallets");
         dispatch(setUserLogin(userCredential.user));
       })

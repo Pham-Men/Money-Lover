@@ -113,12 +113,17 @@
         margin:0;
         border: none;
         background-color: transparent;
+        font-weight: 500;
     }
     
 }
 .active{
+    color: green !important;;
 
     border-bottom: 2px solid green !important;
+}
+.tab-item{
+    font-weight: 700 !important;
 }
 .transaction-empty{
     background-repeat: no-repeat ;
@@ -166,6 +171,12 @@
 }
 .sidebar-item-menu{
     font-size: 14px;
+}
+
+.signout{
+    &:hover{
+        background-color: rgba(177, 246, 177,0.6);
+    }
 }
 
 

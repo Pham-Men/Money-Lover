@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { auth, provider } from "../config";
-import { signInWithPopup } from "firebase/auth";
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
