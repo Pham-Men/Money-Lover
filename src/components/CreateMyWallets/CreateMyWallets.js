@@ -17,6 +17,7 @@ import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectorAuth } from '../../selector';
 import { toggleCreateWallet } from '../../redux/slices/toggleSlice';
+import { collectionName } from '../../const/const';
 
 
 
@@ -43,8 +44,6 @@ function CreateMyWallets() {
     const userAuth = useSelector(selectorAuth);
     console.log(userAuth);
 
-    const collectionName = "my-wallet";
-
     const firestoreUrl =
         `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/${collectionName}`;
 
@@ -61,7 +60,7 @@ function CreateMyWallets() {
                     name: { 'stringValue': values.name },
                     totalMoney: { 'integerValue': values.totalMoney },
                     currency: { 'stringValue': values.currency },
-                    uid: {'stringValue': userAuth.uid}
+                    uid: {'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid}
                 }
             }
             )
@@ -71,8 +70,7 @@ function CreateMyWallets() {
                 .catch(error => {
                     console.error(error);
                 });
-
-                dispatch(toggleCreateWallet());
+            dispatch(toggleCreateWallet())
         }
     })
 
@@ -83,6 +81,10 @@ function CreateMyWallets() {
     };
 
     const dispatch = useDispatch();
+
+    const handleClose = () => {
+        // dispatch(toggleCreateWallet())
+    }
 
     return (
         <>
@@ -234,6 +236,7 @@ function CreateMyWallets() {
                         }}
                     >
                         <Button
+                            onClick={handleClose}
                             type='submit'
                             sx={{
                                 marginTop: '36px',

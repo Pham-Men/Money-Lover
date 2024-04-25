@@ -7,19 +7,21 @@ import { hoverGreen, primary, textGrey } from '../../const/constCSS';
 
 import TextField from '@mui/material/TextField';
 import { useFormik } from 'formik';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { toggleUpdateWallet } from '../../redux/slices/toggleSlice';
 import axios from 'axios';
 
-// import { firebaseConfig } from '../../config';
-
-// import axios from 'axios';
+import { firebaseConfig } from '../../config';
+import { selectordataUser } from '../../selector';
+import { collectionName } from '../../const/const';
 
 function ModalUpdateWallet(prop) {
-    // const collectionName = "my-wallet/9x5TTyglHtu8F5OFvhR1";
+    const dataUser = useSelector(selectordataUser);
 
-    // const firestoreUrl =
-    //     `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/${collectionName}`;
+    const dispatch = useDispatch();
+
+    const firestoreUrl =
+        `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/${collectionName}/9x5TTyglHtu8F5OFvhR1`;
 
     const formik = useFormik({
         initialValues: {
@@ -27,14 +29,22 @@ function ModalUpdateWallet(prop) {
         },
         onSubmit: (values) => {
             console.log(values.totalMoney)
-            axios.put()
+            axios.patch(firestoreUrl, {
+                fields: {
+                    name: { 'stringValue': dataUser.name.stringValue },
+                    totalMoney: { 'integerValue': values.totalMoney },
+                    currency: { 'stringValue': dataUser.currency.stringValue },
+                }
+            })
+            .then(res=>console.log(res))
+            .catch(err=>console.log(err))
+            dispatch(toggleUpdateWallet())
         }
     })
 
-    const dispatch = useDispatch();
 
     const handleClose = () => {
-        // dispatch(toggleUpdateWallet())
+        dispatch(toggleUpdateWallet())
     }
 
     return (
@@ -135,7 +145,6 @@ function ModalUpdateWallet(prop) {
 
                     >
                         <Button
-
                             onClick={handleClose}
                             sx={{
                                 color: `${primary}`,
