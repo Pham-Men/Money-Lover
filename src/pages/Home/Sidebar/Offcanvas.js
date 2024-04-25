@@ -24,7 +24,7 @@ const Offcanvas = ({}) => {
                  .signOut()
                  .then(() => {
                     
-                   // Đăng xuất thành công
+                   
                     navigate("/logout");
                     
                  })

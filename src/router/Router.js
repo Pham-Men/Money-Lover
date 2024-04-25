@@ -6,6 +6,7 @@ import LogIn from "../pages/LogIn/LogIn";
 import MyWallets from "../pages/MyWallets/MyWallets";
 import LogOut from "../pages/LogOut/LogOut";
 import Categories from "../pages/Categories/Categories";
+import ChangePassword from "../pages/ChangePassword/ChangePassword";
 
 function Router() {
   return (
@@ -17,6 +18,7 @@ function Router() {
         <Route path={"/my-wallets"} element={<MyWallets />} />
         <Route path={"/logout"} element={<LogOut />} />
         <Route path={"/categories"} element={<Categories />} />
+        <Route path={"/change-password"} element={<ChangePassword />} />
       </Routes>
     </>
   );
