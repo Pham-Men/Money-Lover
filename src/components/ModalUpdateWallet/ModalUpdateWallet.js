@@ -9,13 +9,14 @@ import TextField from '@mui/material/TextField';
 import { useFormik } from 'formik';
 import { useDispatch } from 'react-redux';
 import { toggleUpdateWallet } from '../../redux/slices/toggleSlice';
+import axios from 'axios';
 
 // import { firebaseConfig } from '../../config';
 
 // import axios from 'axios';
 
 function ModalUpdateWallet(prop) {
-    // const collectionName = "my-wallet/nuvUCQTuLh1Mh63CBaQM";
+    // const collectionName = "my-wallet/9x5TTyglHtu8F5OFvhR1";
 
     // const firestoreUrl =
     //     `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/${collectionName}`;
@@ -26,14 +27,14 @@ function ModalUpdateWallet(prop) {
         },
         onSubmit: (values) => {
             console.log(values.totalMoney)
-            
+            axios.put()
         }
     })
 
     const dispatch = useDispatch();
 
     const handleClose = () => {
-        dispatch(toggleUpdateWallet())
+        // dispatch(toggleUpdateWallet())
     }
 
     return (
