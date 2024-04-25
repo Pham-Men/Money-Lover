@@ -1,4 +1,9 @@
 
+<<<<<<< HEAD
+import { auth, provider } from "../config";
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+=======
+>>>>>>> 8b84589890a3cec210b066e644df26b805456c06
 import FacebookIcon from "@mui/icons-material/Facebook";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
