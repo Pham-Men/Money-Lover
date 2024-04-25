@@ -1,43 +1,20 @@
-import React from 'react';
 
+<<<<<<< HEAD
 import { auth, provider } from "../config";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+=======
+>>>>>>> 8b84589890a3cec210b066e644df26b805456c06
 import FacebookIcon from "@mui/icons-material/Facebook";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from 'react-redux';
-import { setUserLogin } from '../redux/slices/authSlice';
 
 const SignInFaceBook = () => {
-  const ditpatch = useDispatch();
-  const navigate = useNavigate();
-
-    const handleGoogleSignIn = () => {
-      signInWithPopup(auth, provider)
-        .then((result) => {
-          // This gives you a Google Access Token. You can use it to access the Google API.
-          const credential = GoogleAuthProvider.credentialFromResult(result);
-          const token = credential.accessToken;
-          // The signed-in user info.
-          const user = result.user;
-          console.log(user);
-          navigate("/");
-          // IdP data available using getAdditionalUserInfo(result)
-          // ...
-        })
-        .catch((error) => {
-          // Handle Errors here.
-          console.log(error);
-        });
-    };
     return (
       <Box
         sx={{
           cursor: "pointer",
           marginBottom: "14px",
         }}
-        onClick={handleGoogleSignIn}
       >
         <Box
           sx={{
@@ -54,7 +31,7 @@ const SignInFaceBook = () => {
           }}
         >
           <FacebookIcon
-            fontSize="small"
+            fontSize="large"
             sx={{
               paddingRight: "12px",
             }}

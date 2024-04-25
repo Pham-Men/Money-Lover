@@ -19,6 +19,7 @@ const SignInGoogle = () => {
             console.log(result);
           const user = result.user;
           ditpatch(setUserLogin(user))
+          localStorage.setItem('userAuth', JSON.stringify(user));
           navigate("/");
         })
         .catch((error) => {

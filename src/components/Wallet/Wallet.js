@@ -9,16 +9,23 @@ import Avatar from '@mui/material/Avatar';
 import CloseIcon from '@mui/icons-material/Close';
 
 import { primary, textGrey } from '../../const/constCSS';
-import ModalContent from '../ModalContent/ModalContent';
+import ModalUpdateWallet from '../ModalUpdateWallet/ModalUpdateWallet';
+import {toggleUpdateWallet} from '../../redux/slices/toggleSlice'
 
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { selectorAuth } from '../../selector';
+import { selectorToggle } from '../../selector';
 
 function Wallet(prop) {
 
-    const result = useSelector(selectorAuth);
-    console.log(result);
+    const userAuth = useSelector(selectorAuth);
+    console.log(userAuth);
+
+    const stateisOpen = useSelector(selectorToggle)
+    console.log(stateisOpen.isOpenUpdateWallet);
+
+    const dispatch = useDispatch();
 
     const [display, setDisplay] = useState(false)
 
@@ -26,9 +33,8 @@ function Wallet(prop) {
         setDisplay(true)
     }
 
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const handleOpen = () => dispatch(toggleUpdateWallet());
+    const handleClose = () => dispatch(toggleUpdateWallet());
 
     return (
         <>
@@ -235,7 +241,7 @@ function Wallet(prop) {
                             >
                                 User
                             </Typography>
-                            {prop && 
+                            {userAuth.email && 
                                 <Box
                                     sx={{
                                         display: 'flex',
@@ -248,7 +254,7 @@ function Wallet(prop) {
                                             backgroundColor: `${primary}`
                                         }}
                                     >
-                                        {result.email[0].toUpperCase()}
+                                        {userAuth.email[0].toUpperCase()}
                                     </Avatar>
                                     <Typography
                                         sx={{
@@ -259,7 +265,7 @@ function Wallet(prop) {
                                             paddingLeft: '20px'
                                         }}
                                     >
-                                        {result.email}
+                                        {userAuth.email}
                                     </Typography>
                                 </Box>
                             }
@@ -386,10 +392,10 @@ function Wallet(prop) {
                             ADJUST BALANCE
                         </Button>
                         <Modal
-                            open={open}
+                            open={stateisOpen.isOpenUpdateWallet}
                             onClose={handleClose}
                         >
-                            <ModalContent datauser={prop.dataUser}/>
+                            <ModalUpdateWallet datauser={prop.dataUser}/>
                         </Modal>
 
                     </Box>

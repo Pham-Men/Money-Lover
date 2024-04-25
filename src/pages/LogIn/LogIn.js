@@ -57,6 +57,7 @@ function LogIn() {
         
         navigate("/my-wallets");
         dispatch(setUserLogin(userCredential.user));
+        localStorage.setItem('userAuth', JSON.stringify(userCredential.user));
       })
         .catch(() => {
           alert("Account not exist");
