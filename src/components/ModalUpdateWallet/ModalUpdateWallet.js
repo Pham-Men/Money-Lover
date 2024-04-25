@@ -7,13 +7,14 @@ import { hoverGreen, primary, textGrey } from '../../const/constCSS';
 
 import TextField from '@mui/material/TextField';
 import { useFormik } from 'formik';
-import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { toggleUpdateWallet } from '../../redux/slices/toggleSlice';
 
 // import { firebaseConfig } from '../../config';
 
 // import axios from 'axios';
 
-function ModalContent(prop) {
+function ModalUpdateWallet(prop) {
     // const collectionName = "my-wallet/nuvUCQTuLh1Mh63CBaQM";
 
     // const firestoreUrl =
@@ -28,6 +29,12 @@ function ModalContent(prop) {
             
         }
     })
+
+    const dispatch = useDispatch();
+
+    const handleClose = () => {
+        dispatch(toggleUpdateWallet())
+    }
 
     return (
         <>
@@ -127,6 +134,8 @@ function ModalContent(prop) {
 
                     >
                         <Button
+
+                            onClick={handleClose}
                             sx={{
                                 color: `${primary}`,
                                 backgroundColor: 'rgb(230, 230, 230)',
@@ -160,4 +169,4 @@ function ModalContent(prop) {
     )
 }
 
-export default ModalContent;
+export default ModalUpdateWallet;

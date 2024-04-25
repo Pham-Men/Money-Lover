@@ -14,8 +14,9 @@ import { firebaseConfig } from '../../config';
 import { useFormik } from 'formik';
 
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectorAuth } from '../../selector';
+import { toggleCreateWallet } from '../../redux/slices/toggleSlice';
 
 
 
@@ -38,6 +39,7 @@ const currencys = [
 ];
 
 function CreateMyWallets() {
+
     const userAuth = useSelector(selectorAuth);
     console.log(userAuth);
 
@@ -69,6 +71,8 @@ function CreateMyWallets() {
                 .catch(error => {
                     console.error(error);
                 });
+
+                dispatch(toggleCreateWallet());
         }
     })
 
@@ -77,6 +81,8 @@ function CreateMyWallets() {
     const handleChange = (event) => {
         setSelectedImage(event.target.value);
     };
+
+    const dispatch = useDispatch();
 
     return (
         <>
@@ -88,7 +94,8 @@ function CreateMyWallets() {
                         border: '1px solid black',
                         margin: '110px auto',
                         borderRadius: '4px',
-                        padding: '22px'
+                        padding: '22px',
+                        backgroundColor: 'white'
                     }}
                 >
                     <Box>

@@ -1,10 +1,11 @@
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Box from "@mui/material/Box";
 import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-import { bgGray } from "../../const/constCSS";
+import { bgGray, hoverGreen, primary } from "../../const/constCSS";
 import Wallet from '../../components/Wallet/Wallet';
 import CreateMyWallets from '../../components/CreateMyWallets/CreateMyWallets';
 import { firebaseConfig } from '../../config';
@@ -15,8 +16,11 @@ import axios from 'axios'
 
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserData } from '../../redux/slices/dataUserSlice';
-import { selectorAuth, selectordataUser } from '../../selector';
+import { selectorAuth, selectorToggle, selectordataUser } from '../../selector';
+
 import { useNavigate } from 'react-router-dom';
+import { Modal } from '@mui/material';
+import { toggleCreateWallet } from '../../redux/slices/toggleSlice';
 
 function MyWallets() {
 
@@ -24,8 +28,17 @@ function MyWallets() {
     console.log(userAuth);
 
     const dataUser = useSelector(selectordataUser);
+    const stateisOpen = useSelector(selectorToggle);
 
     const dispatch = useDispatch();
+
+    const handleOpen = () => {
+        dispatch(toggleCreateWallet())
+    }
+
+    const handleClose = () => {
+        dispatch(toggleCreateWallet())
+    }
 
     const collectionName = "my-wallet/9x5TTyglHtu8F5OFvhR1";
 
@@ -55,7 +68,7 @@ function MyWallets() {
             <Box
                 sx={{
                     backgroundColor: `${bgGray}`,
-                    height: '100vh'
+                    height: '100vh',
                 }}
             >
                 <Breadcrumbs
@@ -93,9 +106,28 @@ function MyWallets() {
                             My Wallets
                         </Typography>
                     </Box>
+                    <Button
+                        onClick={handleOpen}
+                        sx={{
+                            marginLeft: '800px',
+                            backgroundColor: `${primary}`,
+                            color: 'white',
+                            '&:hover': {
+                                backgroundColor: `${hoverGreen}`,
+                                color: 'white',
+                            }
+                        }}
+                    >
+                        Add Wallet
+                    </Button>
+                    <Modal
+                        open={stateisOpen.isOpenCreateWallet}
+                        onClose={handleClose}
+                    >
+                        <CreateMyWallets />
+                    </Modal>
                 </Breadcrumbs>
-                {/* <Wallet dataUser={dataUser}/> */}
-                <CreateMyWallets />
+                <Wallet dataUser={dataUser}/>
             </Box>
         </>
     )
