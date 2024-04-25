@@ -16,7 +16,9 @@ import { selectordataUser } from '../../selector';
 import { collectionName } from '../../const/const';
 
 function ModalUpdateWallet(prop) {
+    console.log(prop)
     const dataUser = useSelector(selectordataUser);
+    console.log(dataUser)
 
     const dispatch = useDispatch();
 
@@ -31,9 +33,10 @@ function ModalUpdateWallet(prop) {
             console.log(values.totalMoney)
             axios.patch(firestoreUrl, {
                 fields: {
-                    name: { 'stringValue': dataUser.name.stringValue },
+                    name: { 'stringValue': dataUser.data[0].fields.name.stringValue },
                     totalMoney: { 'integerValue': values.totalMoney },
-                    currency: { 'stringValue': dataUser.currency.stringValue },
+                    currency: { 'stringValue': dataUser.data[0].fields.currency.stringValue },
+                    uid: {'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid}
                 }
             })
             .then(res=>console.log(res))
@@ -99,7 +102,7 @@ function ModalUpdateWallet(prop) {
                                 style: 'normal',
                             }}
                         >
-                            {prop.datauser.totalMoney.integerValue}
+                            {prop.dataUser.fields.totalMoney.integerValue}
                         </Typography>
                         <Typography
                             sx={{
@@ -109,7 +112,7 @@ function ModalUpdateWallet(prop) {
                                 style: 'normal',
                             }}
                         >
-                            {prop.datauser.currency.stringValue}
+                            {prop.dataUser.fields.currency.stringValue}
                         </Typography>
                     </Box>
                 </Box>
@@ -136,7 +139,7 @@ function ModalUpdateWallet(prop) {
                             value={formik.values.totalMoney}
                             fullWidth
                             color="success"
-                            defaultValue={prop.datauser.totalMoney.integerValue}
+                            defaultValue={prop.dataUser.fields.totalMoney.integerValue}
                         />
                     </Box>
                     <Box

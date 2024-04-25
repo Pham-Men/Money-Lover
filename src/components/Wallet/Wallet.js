@@ -10,14 +10,16 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import { primary, textGrey } from '../../const/constCSS';
 import ModalUpdateWallet from '../ModalUpdateWallet/ModalUpdateWallet';
-import {toggleUpdateWallet} from '../../redux/slices/toggleSlice'
+import { toggleUpdateWallet } from '../../redux/slices/toggleSlice'
 
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectorAuth } from '../../selector';
 import { selectorToggle } from '../../selector';
 
-function Wallet(prop) {
+function Wallet({ dataUser }) {
+
+    // console.log(dataUser)
 
     const userAuth = useSelector(selectorAuth);
     console.log(userAuth);
@@ -28,8 +30,10 @@ function Wallet(prop) {
     const dispatch = useDispatch();
 
     const [display, setDisplay] = useState(false)
+    const [indDetail, setIndDetail] = useState()
 
-    const handleDetail = () => {
+    const handleDetail = (ind) => {
+        setIndDetail(ind)
         setDisplay(true)
     }
 
@@ -48,7 +52,6 @@ function Wallet(prop) {
                 <Box
                     sx={{
                         width: '576px',
-                        height: '138px',
                         boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.2)',
                         backgroundColor: 'white',
                         borderRadius: '8px'
@@ -76,30 +79,31 @@ function Wallet(prop) {
                             Excluded from Total
                         </Typography>
                     </Box>
-                    <Box
-                        onClick={handleDetail}
-                        sx={{
-                            padding: '20px 0',
-                            display: 'flex',
-                            cursor: 'pointer',
-                            paddingLeft: '20px',
-                            '&:hover': {
-                                backgroundColor: 'rgb(229, 239, 231)',
-                                borderBottomRightRadius: '8px',
-                                borderBottomLeftRadius: '8px',
-                            }
-                        }}
-                    >
-                        <CardMedia
-                            component='img'
+                    {dataUser.data.length > 0 && dataUser.data.map((item, ind) => (
+                        <Box
+                            onClick={() => handleDetail(ind)}
                             sx={{
-                                height: '38px',
-                                width: '38px',
-                                marginRight: '20px'
+                                padding: '20px 0',
+                                display: 'flex',
+                                cursor: 'pointer',
+                                paddingLeft: '20px',
+                                '&:hover': {
+                                    backgroundColor: 'rgb(229, 239, 231)',
+                                    borderBottomRightRadius: '8px',
+                                    borderBottomLeftRadius: '8px',
+                                }
                             }}
-                            image='img/iconWallet.png'
-                        />
-                        {prop &&
+                        >
+                            <CardMedia
+                                component='img'
+                                sx={{
+                                    height: '38px',
+                                    width: '38px',
+                                    marginRight: '20px'
+                                }}
+                                image='img/iconWallet.png'
+                            />
+
                             <Box>
                                 <Typography
                                     sx={{
@@ -110,7 +114,7 @@ function Wallet(prop) {
                                         style: 'normal',
                                     }}
                                 >
-                                    {prop.dataUser.totalMoney.integerValue}
+                                    {item.fields.totalMoney.integerValue}
                                 </Typography>
                                 <Typography
                                     sx={{
@@ -120,11 +124,12 @@ function Wallet(prop) {
                                         style: 'normal',
                                     }}
                                 >
-                                    {prop.dataUser.currency.stringValue}
+                                    {item.fields.currency.stringValue}
                                 </Typography>
                             </Box>
-                        }
-                    </Box>
+                        </Box>
+                    ))
+                    }
                 </Box>
                 {display &&
                     <Box
@@ -193,7 +198,7 @@ function Wallet(prop) {
                                 }}
                                 image='img/iconWallet.png'
                             />
-                            {prop && 
+                            {dataUser.data.length > 0 &&
                                 <Box>
                                     <Typography
                                         sx={{
@@ -204,7 +209,7 @@ function Wallet(prop) {
                                             style: 'normal',
                                         }}
                                     >
-                                        {prop.dataUser.totalMoney.integerValue}
+                                        {dataUser.data[indDetail].fields.totalMoney.integerValue}
                                     </Typography>
                                     <Typography
                                         sx={{
@@ -214,7 +219,7 @@ function Wallet(prop) {
                                             style: 'normal',
                                         }}
                                     >
-                                        {prop.dataUser.currency.stringValue}
+                                        {dataUser.data[indDetail].fields.currency.stringValue}
                                     </Typography>
                                 </Box>
                             }
@@ -241,34 +246,32 @@ function Wallet(prop) {
                             >
                                 User
                             </Typography>
-                            {userAuth.email && 
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        alignContent: 'center',
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignContent: 'center',
 
+                                }}
+                            >
+                                <Avatar
+                                    sx={{
+                                        backgroundColor: `${primary}`
                                     }}
                                 >
-                                    <Avatar
-                                        sx={{
-                                            backgroundColor: `${primary}`
-                                        }}
-                                    >
-                                        {userAuth.email[0].toUpperCase()}
-                                    </Avatar>
-                                    <Typography
-                                        sx={{
-                                            fontFamily: 'roboto, sans-serif',
-                                            fontSize: '14px',
-                                            fontWeight: '500',
-                                            style: 'normal',
-                                            paddingLeft: '20px'
-                                        }}
-                                    >
-                                        {userAuth.email}
-                                    </Typography>
-                                </Box>
-                            }
+                                    {JSON.parse(localStorage.getItem('userAuth')).email[0].toUpperCase()}
+                                </Avatar>
+                                <Typography
+                                    sx={{
+                                        fontFamily: 'roboto, sans-serif',
+                                        fontSize: '14px',
+                                        fontWeight: '500',
+                                        style: 'normal',
+                                        paddingLeft: '20px'
+                                    }}
+                                >
+                                    {JSON.parse(localStorage.getItem('userAuth')).email}
+                                </Typography>
+                            </Box>
                         </Box>
 
                         <Box
@@ -395,7 +398,9 @@ function Wallet(prop) {
                             open={stateisOpen.isOpenUpdateWallet}
                             onClose={handleClose}
                         >
-                            <ModalUpdateWallet datauser={prop.dataUser}/>
+                            <ModalUpdateWallet
+                                dataUser={dataUser.data[indDetail]}
+                            />
                         </Modal>
 
                     </Box>
