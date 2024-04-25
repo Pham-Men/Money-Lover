@@ -2,16 +2,13 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const dataUserSlice = createSlice({
     name: 'dataUser',
-    initialState: [{
-        name: '',
-        totalMoney: '',
-        currency: ''
-    }],
+    initialState: {
+        data: []
+    },
     reducers: {
         setUserData: (state, action) => {
-            state.name = action.payload.name;
-            state.totalMoney = action.payload.totalMoney;
-            state.currency = action.payload.currency;
+            console.log(action)
+            state.data = action.payload;
         }
     }
 })

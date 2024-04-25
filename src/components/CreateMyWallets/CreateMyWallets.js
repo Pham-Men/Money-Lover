@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectorAuth } from '../../selector';
 import { toggleCreateWallet } from '../../redux/slices/toggleSlice';
 import { collectionName } from '../../const/const';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -70,7 +71,7 @@ function CreateMyWallets() {
                 .catch(error => {
                     console.error(error);
                 });
-            dispatch(toggleCreateWallet())
+            window.location.reload()
         }
     })
 
@@ -80,11 +81,6 @@ function CreateMyWallets() {
         setSelectedImage(event.target.value);
     };
 
-    const dispatch = useDispatch();
-
-    const handleClose = () => {
-        // dispatch(toggleCreateWallet())
-    }
 
     return (
         <>
@@ -236,7 +232,6 @@ function CreateMyWallets() {
                         }}
                     >
                         <Button
-                            onClick={handleClose}
                             type='submit'
                             sx={{
                                 marginTop: '36px',
