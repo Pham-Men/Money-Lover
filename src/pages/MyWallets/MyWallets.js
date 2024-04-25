@@ -21,6 +21,7 @@ import { selectorAuth, selectorToggle, selectordataUser } from '../../selector';
 import { useNavigate } from 'react-router-dom';
 import { Modal } from '@mui/material';
 import { toggleCreateWallet } from '../../redux/slices/toggleSlice';
+import { collectionName } from '../../const/const';
 
 function MyWallets() {
 
@@ -40,18 +41,17 @@ function MyWallets() {
         dispatch(toggleCreateWallet())
     }
 
-    const collectionName = "my-wallet/9x5TTyglHtu8F5OFvhR1";
-
     const firestoreUrl =
         `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/${collectionName}`;
 
     useEffect(() => {
         axios.get(firestoreUrl)
             .then(response => {
-                const data = response.data.fields;
-                dispatch(setUserData(data))
-                console.log(data)
-
+                const Wallets = response.data.documents.filter(item => (
+                    item.fields.uid.stringValue == JSON.parse(localStorage.getItem('userAuth')).uid)
+                )
+                console.log(Wallets)
+                dispatch(setUserData(Wallets))
             })
             .catch(error => {
                 console.error("Error fetching data from Firestore:", error);
