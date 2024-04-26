@@ -20,10 +20,15 @@ function ModalUpdateWallet(prop) {
     const dataUser = useSelector(selectordataUser);
     console.log(dataUser)
 
+    // const idWallet = prop.data.name
+    const url = prop.dataUser.name;
+    const length = url.split('/').length;
+    const idWallet = url.split('/')[length-1]
+
     const dispatch = useDispatch();
 
     const firestoreUrl =
-        `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/${collectionName}/9x5TTyglHtu8F5OFvhR1`;
+        `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/${collectionName}/${idWallet}`;
 
     const formik = useFormik({
         initialValues: {
@@ -41,7 +46,7 @@ function ModalUpdateWallet(prop) {
             })
             .then(res=>console.log(res))
             .catch(err=>console.log(err))
-            dispatch(toggleUpdateWallet())
+            window.location.reload();
         }
     })
 
