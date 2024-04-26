@@ -21,7 +21,7 @@ import { selectorAuth, selectorToggle, selectordataUser } from '../../selector';
 import { useNavigate } from 'react-router-dom';
 import { Modal } from '@mui/material';
 import { toggleCreateWallet } from '../../redux/slices/toggleSlice';
-import { collectionName } from '../../const/const';
+import { API_URL, collectionName } from '../../const/const';
 
 function MyWallets() {
 
@@ -43,7 +43,7 @@ function MyWallets() {
     }
 
     const firestoreUrl =
-        `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/${collectionName}`;
+        `${API_URL}/projects/${firebaseConfig.projectId}/databases/(default)/documents/${collectionName}`;
 
     useEffect(() => {
         axios.get(firestoreUrl)
@@ -107,26 +107,30 @@ function MyWallets() {
                             My Wallets
                         </Typography>
                     </Box>
-                    <Button
-                        onClick={handleOpen}
-                        sx={{
-                            marginLeft: '800px',
-                            backgroundColor: `${primary}`,
-                            color: 'white',
-                            '&:hover': {
-                                backgroundColor: `${hoverGreen}`,
+                    <Box>
+                        <Button
+                            onClick={handleOpen}
+                            sx={{
+                                position: 'absolute',
+                                right: '80px',
+                                top:'14px',
+                                backgroundColor: `${primary}`,
                                 color: 'white',
-                            }
-                        }}
-                    >
-                        Add Wallet
-                    </Button>
-                    <Modal
-                        open={stateisOpen.isOpenCreateWallet}
-                        onClose={handleClose}
-                    >
-                        <CreateMyWallets />
-                    </Modal>
+                                '&:hover': {
+                                    backgroundColor: `${hoverGreen}`,
+                                    color: 'white',
+                                }
+                            }}
+                        >
+                            Add Wallet
+                        </Button>
+                        <Modal
+                            open={stateisOpen.isOpenCreateWallet}
+                            onClose={handleClose}
+                        >
+                            <CreateMyWallets />
+                        </Modal>
+                    </Box>
                 </Breadcrumbs>
                 <Wallet dataUser={dataUser}/>
             </Box>

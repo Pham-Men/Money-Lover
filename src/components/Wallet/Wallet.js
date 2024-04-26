@@ -41,8 +41,6 @@ function Wallet({ dataUser }) {
     }
 
     const handleDelete = (ind) => {
-        console.log(1)
-        console.log(dataUser.data[ind].name)
         axios.delete(`${API_URL}/${dataUser.data[ind].name}`)
             .then(res => console.log(res))
             .catch(err => console.log(err));
