@@ -17,7 +17,7 @@ import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectorAuth } from '../../selector';
 import { toggleCreateWallet } from '../../redux/slices/toggleSlice';
-import { collectionName } from '../../const/const';
+import { API_URL, collectionName } from '../../const/const';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -46,7 +46,7 @@ function CreateMyWallets() {
     console.log(userAuth);
 
     const firestoreUrl =
-        `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/${collectionName}`;
+        `${API_URL}/projects/${firebaseConfig.projectId}/databases/(default)/documents/${collectionName}`;
 
     const formik = useFormik({
         initialValues: {
