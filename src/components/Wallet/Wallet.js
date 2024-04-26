@@ -7,6 +7,7 @@ import Modal from '@mui/material/Modal';
 import Avatar from '@mui/material/Avatar';
 
 import CloseIcon from '@mui/icons-material/Close';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import { primary, textGrey } from '../../const/constCSS';
 import ModalUpdateWallet from '../ModalUpdateWallet/ModalUpdateWallet';
@@ -16,6 +17,8 @@ import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectorAuth } from '../../selector';
 import { selectorToggle } from '../../selector';
+import axios from 'axios';
+import { API_URL } from '../../const/const';
 
 function Wallet({ dataUser }) {
 
@@ -29,12 +32,21 @@ function Wallet({ dataUser }) {
 
     const dispatch = useDispatch();
 
-    const [display, setDisplay] = useState(false)
-    const [indDetail, setIndDetail] = useState()
+    const [display, setDisplay] = useState(false);
+    const [indDetail, setIndDetail] = useState();
 
     const handleDetail = (ind) => {
         setIndDetail(ind)
         setDisplay(true)
+    }
+
+    const handleDelete = (ind) => {
+        console.log(1)
+        console.log(dataUser.data[ind].name)
+        axios.delete(`${API_URL}/${dataUser.data[ind].name}`)
+            .then(res => console.log(res))
+            .catch(err => console.log(err));
+        window.location.reload();
     }
 
     const handleOpen = () => dispatch(toggleUpdateWallet());
@@ -52,6 +64,7 @@ function Wallet({ dataUser }) {
                 <Box
                     sx={{
                         width: '576px',
+                        height: '100%',
                         boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.2)',
                         backgroundColor: 'white',
                         borderRadius: '8px'
@@ -81,12 +94,11 @@ function Wallet({ dataUser }) {
                     </Box>
                     {dataUser.data.length > 0 && dataUser.data.map((item, ind) => (
                         <Box
-                            onClick={() => handleDetail(ind)}
                             sx={{
                                 padding: '20px 0',
                                 display: 'flex',
-                                cursor: 'pointer',
                                 paddingLeft: '20px',
+                                justifyContent: 'space-between',
                                 '&:hover': {
                                     backgroundColor: 'rgb(229, 239, 231)',
                                     borderBottomRightRadius: '8px',
@@ -94,41 +106,73 @@ function Wallet({ dataUser }) {
                                 }
                             }}
                         >
-                            <CardMedia
-                                component='img'
+                            <Box
+                                onClick={() => handleDetail(ind)}
                                 sx={{
-                                    height: '38px',
-                                    width: '38px',
-                                    marginRight: '20px'
+                                    cursor: 'pointer',
+                                    display: 'flex'
                                 }}
-                                image='img/iconWallet.png'
-                            />
+                            >
+                                <CardMedia
+                                    component='img'
+                                    sx={{
+                                        height: '38px',
+                                        width: '38px',
+                                        marginRight: '20px'
+                                    }}
+                                    image='img/iconWallet.png'
+                                />
 
-                            <Box>
-                                <Typography
-                                    sx={{
-                                        fontFamily: 'roboto, sans-serif',
-                                        fontSize: '12px',
-                                        fontWeight: '400',
-                                        color: `${textGrey}`,
-                                        style: 'normal',
-                                    }}
-                                >
-                                    {item.fields.totalMoney.integerValue}
-                                </Typography>
-                                <Typography
-                                    sx={{
-                                        fontFamily: 'roboto, sans-serif',
-                                        fontSize: '14px',
-                                        fontWeight: '500',
-                                        style: 'normal',
-                                    }}
-                                >
-                                    {item.fields.currency.stringValue}
-                                </Typography>
+                                <Box>
+                                    <Typography
+                                        sx={{
+                                            fontFamily: 'roboto, sans-serif',
+                                            fontSize: '12px',
+                                            fontWeight: '400',
+                                            color: `${textGrey}`,
+                                            style: 'normal',
+                                        }}
+                                    >
+                                        {item.fields.totalMoney.integerValue}
+                                    </Typography>
+                                    <Typography
+                                        sx={{
+                                            fontFamily: 'roboto, sans-serif',
+                                            fontSize: '14px',
+                                            fontWeight: '500',
+                                            style: 'normal',
+                                        }}
+                                    >
+                                        {item.fields.currency.stringValue}
+                                    </Typography>
+                                </Box>
                             </Box>
+                            <DeleteIcon
+                                onClick={() => handleDelete(ind)}
+                                color='success'
+                                sx={{
+                                    marginRight: '20px',
+                                    cursor: 'pointer'
+                                }}
+                            />
                         </Box>
                     ))
+                    }
+                    {!dataUser.data.length && 
+                        <Typography
+                            sx={{
+                                padding: '20px 0',
+                                paddingLeft: '20px',
+                                fontSize: '16px',
+                                '&:hover': {
+                                    backgroundColor: 'rgb(229, 239, 231)',
+                                    borderBottomRightRadius: '8px',
+                                    borderBottomLeftRadius: '8px',
+                                }
+                            }}
+                        >
+                            Hiện tại không có ví nào cả
+                        </Typography>
                     }
                 </Box>
                 {display &&

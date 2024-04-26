@@ -13,7 +13,7 @@ import axios from 'axios';
 
 import { firebaseConfig } from '../../config';
 import { selectordataUser } from '../../selector';
-import { collectionName } from '../../const/const';
+import { API_URL, collectionName } from '../../const/const';
 
 function ModalUpdateWallet(prop) {
     console.log(prop)
@@ -28,7 +28,7 @@ function ModalUpdateWallet(prop) {
     const dispatch = useDispatch();
 
     const firestoreUrl =
-        `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/${collectionName}/${idWallet}`;
+        `${API_URL}/projects/${firebaseConfig.projectId}/databases/(default)/documents/${collectionName}/${idWallet}`;
 
     const formik = useFormik({
         initialValues: {
