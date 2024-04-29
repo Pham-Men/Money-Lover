@@ -12,6 +12,8 @@ import { useNavigate } from "react-router-dom";
 
 
 
+
+
 const Offcanvas = ({}) => {
 
     const [refresh, setRefresh] = useState(false);
@@ -25,6 +27,10 @@ const Offcanvas = ({}) => {
                  .signOut()
                  .then(() => {
                     
+                  const isAuthenticated = localStorage.getItem("isAuthenticated");
+                  if (isAuthenticated ) {
+                    localStorage.removeItem("isAuthenticated");
+                  }
                    
                     navigate("/logout");
                     
@@ -43,6 +49,7 @@ const Offcanvas = ({}) => {
     
     return (
       <>
+        
         <div
           className={styles["offcanvas-sidebar"] + " offcanvas offcanvas-start"}
           id="sidebar2"
@@ -119,7 +126,6 @@ const Offcanvas = ({}) => {
 
         {/* modal */}
         <div className="modal " id="myModal" aria-hidden="false">
-  
           <div className="modal-dialog modal-md">
             <div className="modal-content">
               <div className="modal-header d-flex justify-content-between align-items-center">
@@ -156,7 +162,6 @@ const Offcanvas = ({}) => {
                 <button
                   className="btn bg-success text-light"
                   onClick={() => {
-            
                     navigate("/change-password");
                     window.location.reload();
                   }}
