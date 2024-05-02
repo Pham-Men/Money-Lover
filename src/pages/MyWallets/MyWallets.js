@@ -1,16 +1,12 @@
-import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Box from "@mui/material/Box";
-import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import { bgGray, hoverGreen, primary } from "../../const/constCSS";
 import Wallet from '../../components/Wallet/Wallet';
 import CreateMyWallets from '../../components/CreateMyWallets/CreateMyWallets';
 import { firebaseConfig } from '../../config';
 
-import { useEffect,} from 'react';
+import { useEffect, } from 'react';
 
 import axios from 'axios'
 
@@ -18,10 +14,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setUserData } from '../../redux/slices/dataUserSlice';
 import { selectorAuth, selectorToggle, selectordataUser } from '../../selector';
 
-import { useNavigate } from 'react-router-dom';
 import { Modal } from '@mui/material';
 import { toggleCreateWallet } from '../../redux/slices/toggleSlice';
-import { API_URL, collectionName } from '../../const/const';
+import { firestoreUrl } from '../../const/const';
+import BreadcrumbsComponent from '../../components/BreadcrubsComponent/BreadcrumbsComponent';
 
 function MyWallets() {
 
@@ -29,7 +25,7 @@ function MyWallets() {
     console.log(userAuth);
 
     const dataUser = useSelector(selectordataUser);
-    // console.log(dataUser.data);
+    console.log(dataUser.data);
     const stateisOpen = useSelector(selectorToggle);
 
     const dispatch = useDispatch();
@@ -42,28 +38,21 @@ function MyWallets() {
         dispatch(toggleCreateWallet())
     }
 
-    const firestoreUrl =
-        `${API_URL}/projects/${firebaseConfig.projectId}/databases/(default)/documents/${collectionName}`;
-
     useEffect(() => {
         axios.get(firestoreUrl)
             .then(response => {
                 const Wallets = response.data.documents.filter(item => (
-                    item.fields.uid.stringValue == JSON.parse(localStorage.getItem('userAuth')).uid)
+                    item.fields.uid.stringValue === JSON.parse(localStorage.getItem('userAuth')).uid)
                 )
-                console.log(Wallets)
-                dispatch(setUserData(Wallets))
+                // console.log(Wallets)
+                dispatch(setUserData(Wallets));
+                localStorage.setItem('dataUser', JSON.stringify(Wallets));
             })
             .catch(error => {
                 console.error("Error fetching data from Firestore:", error);
             });
     }, [])
 
-    const navigate = useNavigate();
-
-    const toHome = () => {
-        navigate('/')
-    }
     return (
         <>
             <Box
@@ -72,67 +61,33 @@ function MyWallets() {
                     height: '100vh',
                 }}
             >
-                <Breadcrumbs
-                    sx={{
-                        height: '62px',
-                        backgroundColor: 'white',
-                    }}
-                >
-                    <Box
-                        onClick={toHome}
+                <BreadcrumbsComponent/>
+                <Box>
+                    <Button
+                        onClick={handleOpen}
                         sx={{
-                            height: '62px',
-                            cursor: 'pointer',
-                            display: 'flex',
-                            alignItems: 'center'
+                            zIndex: '2',
+                            position: 'absolute',
+                            right: '80px',
+                            top: '14px',
+                            backgroundColor: `${primary}`,
+                            color: 'white',
+                            '&:hover': {
+                                backgroundColor: `${hoverGreen}`,
+                                color: 'white',
+                            }
                         }}
                     >
-                        <Box>
-                            <ArrowBackIcon
-                                sx={{
-                                    marginLeft: '80px',
-                                    marginRight: '36px'
-                                }}
-                            />
-                        </Box>
-                        <Typography
-                            sx={{
-                                fontFamily: 'Roboto, sans-serif',
-                                fontSize: '20px',
-                                fontWeight: '500',
-                                color: 'black',
-                                style: 'normal'
-                            }}
-                        >
-                            My Wallets
-                        </Typography>
-                    </Box>
-                    <Box>
-                        <Button
-                            onClick={handleOpen}
-                            sx={{
-                                position: 'absolute',
-                                right: '80px',
-                                top:'14px',
-                                backgroundColor: `${primary}`,
-                                color: 'white',
-                                '&:hover': {
-                                    backgroundColor: `${hoverGreen}`,
-                                    color: 'white',
-                                }
-                            }}
-                        >
-                            Add Wallet
-                        </Button>
-                        <Modal
-                            open={stateisOpen.isOpenCreateWallet}
-                            onClose={handleClose}
-                        >
-                            <CreateMyWallets />
-                        </Modal>
-                    </Box>
-                </Breadcrumbs>
-                <Wallet dataUser={dataUser}/>
+                        Add Wallet
+                    </Button>
+                    <Modal
+                        open={stateisOpen.isOpenCreateWallet}
+                        onClose={handleClose}
+                    >
+                        <CreateMyWallets />
+                    </Modal>
+                </Box>
+                <Wallet dataUser={dataUser} />
             </Box>
         </>
     )

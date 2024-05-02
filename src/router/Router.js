@@ -7,6 +7,7 @@ import MyWallets from "../pages/MyWallets/MyWallets";
 import LogOut from "../pages/LogOut/LogOut";
 import Categories from "../pages/Categories/Categories";
 import ChangePassword from "../pages/ChangePassword/ChangePassword";
+import Transactions from "../pages/Transactions/Transactions";
 
 function Router() {
   return (
@@ -19,6 +20,7 @@ function Router() {
         <Route path={"/logout"} element={<LogOut />} />
         <Route path={"/categories"} element={<Categories />} />
         <Route path={"/change-password"} element={<ChangePassword />} />
+        <Route path={'/transactions'} element={<Transactions/>}/>
       </Routes>
     </>
   );

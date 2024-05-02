@@ -9,16 +9,12 @@ import Button from '@mui/material/Button'
 import { useState } from 'react';
 
 import { hoverGreen, primary } from '../../const/constCSS';
-import { firebaseConfig } from '../../config';
-
 import { useFormik } from 'formik';
 
 import axios from 'axios';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { selectorAuth } from '../../selector';
-import { toggleCreateWallet } from '../../redux/slices/toggleSlice';
-import { API_URL, collectionName } from '../../const/const';
-import { useNavigate } from 'react-router-dom';
+import { firestoreUrl } from '../../const/const';
 
 
 
@@ -45,9 +41,6 @@ function CreateMyWallets() {
     const userAuth = useSelector(selectorAuth);
     console.log(userAuth);
 
-    const firestoreUrl =
-        `${API_URL}/projects/${firebaseConfig.projectId}/databases/(default)/documents/${collectionName}`;
-
     const formik = useFormik({
         initialValues: {
             name: '',
@@ -56,22 +49,25 @@ function CreateMyWallets() {
         },
         onSubmit: (values) => {
             console.log(values)
-            axios.post(firestoreUrl, {
-                fields: {
-                    name: { 'stringValue': values.name },
-                    totalMoney: { 'integerValue': values.totalMoney },
-                    currency: { 'stringValue': values.currency },
-                    uid: {'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid}
-                }
-            }
-            )
+            axios.post
+                (
+                    firestoreUrl,
+                    {
+                        fields: {
+                            name: { 'stringValue': values.name },
+                            totalMoney: { 'integerValue': values.totalMoney },
+                            currency: { 'stringValue': values.currency },
+                            uid: { 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }
+                        }
+                    }
+                )
                 .then(response => {
                     console.log(response)
+                    window.location.reload()
                 })
                 .catch(error => {
                     console.error(error);
                 });
-            window.location.reload()
         }
     })
 

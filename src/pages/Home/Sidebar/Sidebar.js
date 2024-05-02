@@ -11,15 +11,21 @@ import { useState } from "react";
 
 import { useSelector } from "react-redux";
 import Offcanvas from "./Offcanvas";
+import { unstable_ClassNameGenerator } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
-  
+  const navigate = useNavigate();
 
   const [activeButton, setActiveButton] = useState(2);
   const handleClick = (index) => {
     setActiveButton(index);
   };
   const isOpen = useSelector((state) => state.sidebar.isOpen);
+
+  const toTransactions = () => {
+    navigate('/transactions')
+  }
 
   return (
     <section className=" content ">
@@ -51,6 +57,7 @@ const Sidebar = () => {
                 </button>
               </span>
               <span
+                onClick={toTransactions}
                 className={
                   styles["sidebar-item-menu"] +
                   " text-success border-bottom mt-3 py-5 gap-2 border-success d-block flex-column d-flex align-items-center sidebar-item w-100"
@@ -66,7 +73,7 @@ const Sidebar = () => {
                 }
               >
                 <LocalGroceryStoreOutlinedIcon />
-                <small>Transactions</small>
+                <small>Store</small>
               </span>
               <span
                 className={
@@ -75,7 +82,7 @@ const Sidebar = () => {
                 }
               >
                 <HelpOutlineOutlinedIcon />
-                <small>Transactions</small>
+                <small>Help</small>
               </span>
             </div>
           </div>
