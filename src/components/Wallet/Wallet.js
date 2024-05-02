@@ -22,7 +22,7 @@ import { API_URL } from '../../const/const';
 
 function Wallet({ dataUser }) {
 
-    // console.log(dataUser)
+    console.log(dataUser)
 
     const userAuth = useSelector(selectorAuth);
     console.log(userAuth);
@@ -42,9 +42,11 @@ function Wallet({ dataUser }) {
 
     const handleDelete = (ind) => {
         axios.delete(`${API_URL}/${dataUser.data[ind].name}`)
-            .then(res => console.log(res))
+            .then(res => {
+                // console.log(res);
+                window.location.reload();
+            })
             .catch(err => console.log(err));
-        window.location.reload();
     }
 
     const handleOpen = () => dispatch(toggleUpdateWallet());
@@ -65,7 +67,8 @@ function Wallet({ dataUser }) {
                         height: '100%',
                         boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.2)',
                         backgroundColor: 'white',
-                        borderRadius: '8px'
+                        borderRadius: '8px',
+                        marginTop: '62px'
                     }}
                 >
                     <Box
