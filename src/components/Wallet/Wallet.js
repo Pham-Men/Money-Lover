@@ -437,7 +437,7 @@ function Wallet({ dataUser }) {
                                 }
                             }}
                         >
-                            ADJUST BALANCE
+                            wallet update
                         </Button>
                         <Modal
                             open={stateisOpen.isOpenUpdateWallet}
