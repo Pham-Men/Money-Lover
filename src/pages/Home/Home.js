@@ -6,17 +6,28 @@ import "./index.css";
 import Header from "./Header/Header";
 import Sidebar from "./Sidebar/Sidebar";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 
 export default function Dashboard() {
   
   const navigate = useNavigate();
+  const isAuthenticated = localStorage.getItem("isAuthenticated");
+
   useEffect(() => {
     const user = auth.currentUser;
-    if (!user){
-      navigate("/auth");
+    if (!user) {
+      
+      if (!isAuthenticated) {
+        navigate("/auth");
+      }
     }
-  },[]);
+  }, [navigate]);
+
+    useEffect(() => {
+      if (!isAuthenticated) {
+      localStorage.setItem("isAuthenticated", "true");}
+    }, []);
+ 
 
 
   return (
