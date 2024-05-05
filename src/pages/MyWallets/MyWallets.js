@@ -8,8 +8,7 @@ import CreateMyWallets from '../../components/CreateMyWallets/CreateMyWallets';
 import { useEffect, useState, } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { setUserData } from "../../redux/slices/dataUserSlice";
-import { selectorToggle, selectordataUser } from '../../selector';
+import { selectorToggle } from '../../selector';
 
 import Modal from '@mui/material/Modal';
 import { toggleCreateWallet, toggleTransferMoney } from '../../redux/slices/toggleSlice';
@@ -18,8 +17,13 @@ import TransferMoney from "../../components/TransferMoney";
 import WalletService from "../../services/wallet.service";
 
 function MyWallets() {
+    const [isReload, setIsReload] = useState(false);
 
-    const dataUser = useSelector(selectordataUser);
+    const handleReload = () => {
+        setIsReload(!isReload);
+    };
+
+    const [wallets, setWallets] = useState([]);
     const stateisOpen = useSelector(selectorToggle);
 
     const dispatch = useDispatch();
@@ -41,30 +45,30 @@ function MyWallets() {
     }
 
     useEffect(() => {
-
         WalletService.getWallets()
             .then(response => {
-                const Wallets = response.data.documents.filter(item => (
+                const wallets = response.data.documents.filter(item => (
                     item.fields.uid.stringValue === JSON.parse(localStorage.getItem('userAuth')).uid)
                 )
-                console.log(Wallets)
-                dispatch(setUserData(Wallets));
-                localStorage.setItem('dataUser', JSON.stringify(Wallets));
+                console.log(wallets)
+                setWallets(wallets)
             })
             .catch(error => {
-                console.error("Error fetching data from Firestore:", error);
+                console.error(error);
             });
-    }, [])
+    }, [isReload])
+
+    console.log(wallets)
 
     return (
         <>
             <Box
                 sx={{
                     backgroundColor: `${bgGray}`,
-                    height: '100vh',
+                    minHeight: '100vh'
                 }}
             >
-                <BreadcrumbsComponent/>
+                <BreadcrumbsComponent />
                 <Box>
                     <Button
                         onClick={handleOpenCreateWallet}
@@ -87,7 +91,7 @@ function MyWallets() {
                         open={stateisOpen.isOpenCreateWallet}
                         onClose={handleCloseCreateWallet}
                     >
-                        <CreateMyWallets/>
+                        <CreateMyWallets changeIsReload={handleReload}/>
                     </Modal>
                 </Box>
                 <Box>
@@ -109,13 +113,13 @@ function MyWallets() {
                         transfer money
                     </Button>
                     <Modal
-                        open= {stateisOpen.isOpenTransferMoney}
+                        open={stateisOpen.isOpenTransferMoney}
                         onClose={handleCloseTransferMoney}
                     >
-                        <TransferMoney/>
+                        <TransferMoney />
                     </Modal>
                 </Box>
-                <Wallet dataUser={dataUser} />
+                <Wallet wallets={wallets} changeIsReload={handleReload}/>
             </Box>
         </>
     )

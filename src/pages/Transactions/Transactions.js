@@ -7,13 +7,8 @@ import { CardMedia, Grid,Typography } from '@mui/material';
 import FormRevenue from '../../components/FormRevenue/FormRevenue';
 import FormSpending from '../../components/FormSpending/FormSpending';
 
-import { useSelector } from 'react-redux';
-import { selectordataUser } from '../../selector';
 
 function Transactions() {
-
-    const dataUser = useSelector(selectordataUser);
-    console.log(dataUser.data);
 
     const dataUserLocal = JSON.parse(localStorage.getItem('dataUser'));
     console.log(dataUserLocal);

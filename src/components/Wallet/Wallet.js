@@ -11,14 +11,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 import { primary, textGrey } from '../../const/constCSS';
 import ModalUpdateWallet from '../ModalUpdateWallet/ModalUpdateWallet';
-import { toggleUpdateWallet } from '../../redux/slices/toggleSlice'
+import { toggleUpdateWallet } from '../../redux/slices/toggleSlice';
 
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectorToggle } from '../../selector';
 import WalletService from '../../services/wallet.service';
 
-function Wallet({ dataUser }) {
+function Wallet({wallets, changeIsReload}) {
 
     const stateisOpen = useSelector(selectorToggle)
 
@@ -27,16 +27,20 @@ function Wallet({ dataUser }) {
     const [display, setDisplay] = useState(false);
     const [indDetail, setIndDetail] = useState();
 
+    const changeDisplayDetailWallet = () => {
+        setDisplay(!display)
+    }
+
     const handleDetail = (ind) => {
         setIndDetail(ind)
         setDisplay(true)
     }
 
     const handleDelete = (ind) => {
-        const idWallet = (dataUser.data[ind].name.split('/')[dataUser.data[ind].name.split('/').length -1])
+        const idWallet = (wallets[ind].name.split('/')[wallets[ind].name.split('/').length -1])
         WalletService.deleteWallets(idWallet)
-            .then(res => {
-                console.log(res);
+            .then(() => {
+                changeIsReload()
             })
             .catch(err => console.log(err));
     }
@@ -85,7 +89,7 @@ function Wallet({ dataUser }) {
                             Excluded from Total
                         </Typography>
                     </Box>
-                    {dataUser.data.length > 0 && dataUser.data.map((item, ind) => (
+                    {wallets.length > 0 && wallets.map((item, ind) => (
                         <Box
                             sx={{
                                 padding: '20px 0',
@@ -151,7 +155,7 @@ function Wallet({ dataUser }) {
                         </Box>
                     ))
                     }
-                    {!dataUser.data.length && 
+                    {!wallets.length && 
                         <Typography
                             sx={{
                                 padding: '20px 0',
@@ -164,7 +168,7 @@ function Wallet({ dataUser }) {
                                 }
                             }}
                         >
-                            Hiện tại không có ví nào cả
+                            No wallet
                         </Typography>
                     }
                 </Box>
@@ -235,7 +239,7 @@ function Wallet({ dataUser }) {
                                 }}
                                 image='img/iconWallet.png'
                             />
-                            {dataUser.data.length > 0 &&
+                            {wallets.length > 0 &&
                                 <Box>
                                     <Typography
                                         sx={{
@@ -246,7 +250,7 @@ function Wallet({ dataUser }) {
                                             style: 'normal',
                                         }}
                                     >
-                                        {dataUser.data[indDetail].fields.totalMoney.integerValue}
+                                        {wallets[indDetail].fields.totalMoney.integerValue}
                                     </Typography>
                                     <Typography
                                         sx={{
@@ -256,7 +260,7 @@ function Wallet({ dataUser }) {
                                             style: 'normal',
                                         }}
                                     >
-                                        {dataUser.data[indDetail].fields.currency.stringValue}
+                                        {wallets[indDetail].fields.currency.stringValue}
                                     </Typography>
                                 </Box>
                             }
@@ -436,7 +440,9 @@ function Wallet({ dataUser }) {
                             onClose={handleClose}
                         >
                             <ModalUpdateWallet
-                                dataUser={dataUser.data[indDetail]}
+                                dataUser={wallets[indDetail]}
+                                changeIsReload={changeIsReload}
+                                changeDisplayDetailWallet={changeDisplayDetailWallet}
                             />
                         </Modal>
 

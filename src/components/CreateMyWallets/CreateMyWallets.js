@@ -12,11 +12,12 @@ import { hoverGreen, primary } from '../../const/constCSS';
 import { useFormik } from 'formik';
 
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectorAuth } from '../../selector';
 import { firestoreUrl } from '../../const/const';
+import { toggleCreateWallet } from '../../redux/slices/toggleSlice';
 
-
+import * as Yup from 'yup';
 
 const images = [
     { value: 'image', label: <img src="img/iconWallet.png" alt="Image" style={{ width: '26px' }} /> },
@@ -36,10 +37,12 @@ const currencys = [
     { value: 'Yuan Renminbi', label: <img src="img/ic_currency_cny.png" alt="Image 4" style={{ width: '26px' }} />, text: 'Yuan Renminbi' },
 ];
 
-function CreateMyWallets() {
+function CreateMyWallets({changeIsReload}) {
 
     const userAuth = useSelector(selectorAuth);
     console.log(userAuth);
+
+    const dispatch = useDispatch();
 
     const formik = useFormik({
         initialValues: {
@@ -47,6 +50,18 @@ function CreateMyWallets() {
             totalMoney: '',
             currency: ''
         },
+        validationSchema: Yup.object({
+            name: Yup
+                .string()
+                .required('Required'),
+            totalMoney: Yup
+                .number()
+                .typeError('Please enter number')
+                .required('Required'),
+            currency: Yup
+                .string()
+                .required('Required'),
+        }),
         onSubmit: (values) => {
             console.log(values)
             axios.post
@@ -61,8 +76,9 @@ function CreateMyWallets() {
                         }
                     }
                 )
-                .then(response => {
-                    console.log(response);
+                .then(() => {
+                    dispatch(toggleCreateWallet());
+                    changeIsReload();
                 })
                 .catch(error => {
                     console.error(error);
@@ -145,6 +161,8 @@ function CreateMyWallets() {
                                 value={formik.values.name}
                                 placeholder='Your wallet name'
                                 fullWidth
+                                error={formik.touched.name && Boolean(formik.errors.name)}
+                                helperText={formik.touched.name && formik.errors.name}
                             />
                         </Box>
                     </Box>
@@ -168,6 +186,8 @@ function CreateMyWallets() {
                                 name='currency'
                                 value={formik.values.currency}
                                 onChange={formik.handleChange}
+                                error={formik.touched.currency && Boolean(formik.errors.currency)}
+                                helperText={formik.touched.currency && formik.errors.currency}
                             >
                                 {currencys.map((currency) => (
                                     <MenuItem key={currency.value} value={currency.value}>
@@ -182,6 +202,8 @@ function CreateMyWallets() {
                             value={formik.values.totalMoney}
                             sx={{ width: '40%' }}
                             placeholder='initial Balance'
+                            error={formik.touched.totalMoney && Boolean(formik.errors.totalMoney)}
+                            helperText={formik.touched.totalMoney && formik.errors.totalMoney}
                         />
                     </Box>
                     <Box sx={{

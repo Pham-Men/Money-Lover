@@ -8,20 +8,27 @@ import LogOut from "../pages/LogOut/LogOut";
 import Categories from "../pages/Categories/Categories";
 import ChangePassword from "../pages/ChangePassword/ChangePassword";
 import Transactions from "../pages/Transactions/Transactions";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectorAuth } from "../selector";
 import { useEffect } from "react";
+import { setUserByLocalStorage } from "../redux/slices/authSlice";
 
 function Router() {
-//   const userAuth = useSelector(selectorAuth);
-//   const naviagte = useNavigate()
-  
-//   useEffect(() => {
-//       if(!userAuth.uid) {
-//           naviagte("/auth")
-//       }
-//   }, [userAuth])
 
+  
+  const dispatch = useDispatch();
+  
+  if (localStorage.getItem('userAuth')) {
+    dispatch(setUserByLocalStorage(JSON.parse(localStorage.getItem('userAuth'))))
+  }
+  const userAuth = useSelector(selectorAuth);
+  const naviagte = useNavigate()
+  
+  useEffect(() => {
+      if(!userAuth.uid) {
+          naviagte("/auth")
+      }
+  }, [])
 
   return (
     <>

@@ -7,19 +7,19 @@ import { hoverGreen, primary, textGrey } from '../../const/constCSS';
 
 import TextField from '@mui/material/TextField';
 import { useFormik } from 'formik';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { toggleUpdateWallet } from '../../redux/slices/toggleSlice';
-
-import { selectordataUser } from '../../selector';
 import WalletService from '../../services/wallet.service';
 
-function ModalUpdateWallet(prop) {
-    const dataUser = useSelector(selectordataUser);
+import * as Yup from 'yup';
 
-    const url = prop.dataUser.name;
+
+
+function ModalUpdateWallet({ dataUser, changeIsReload, changeDisplayDetailWallet }) {
+
+    const url = dataUser.name;
     const length = url.split('/').length;
     const idWallet = url.split('/')[length - 1]
-    console.log(idWallet)
 
     const dispatch = useDispatch();
 
@@ -27,32 +27,28 @@ function ModalUpdateWallet(prop) {
         initialValues: {
             totalMoney: ''
         },
+        validationSchema: Yup.object({
+            totalMoney: Yup
+                .number()
+                .typeError('Please enter number')
+                .required('Required'),
+        }),
         onSubmit: (values) => {
-            // axios.patch
-            //     (
-            //         `${firestoreUrl}/${idWallet}`,
-            //         {
-            //             fields: {
-            //                 name: { 'stringValue': dataUser.data[0].fields.name.stringValue },
-            //                 totalMoney: { 'integerValue': values.totalMoney },
-            //                 currency: { 'stringValue': dataUser.data[0].fields.currency.stringValue },
-            //                 uid: { 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }
-            //             }
-            //         }
-            //     )
             WalletService.updateWallets(
                 idWallet,
                 {
                     fields: {
-                        name: { 'stringValue': dataUser.data[0].fields.name.stringValue },
+                        name: { 'stringValue': dataUser.fields.name.stringValue },
                         totalMoney: { 'integerValue': values.totalMoney },
-                        currency: { 'stringValue': dataUser.data[0].fields.currency.stringValue },
+                        currency: { 'stringValue': dataUser.fields.currency.stringValue },
                         uid: { 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }
                     }
                 }
             )
                 .then(() => {
-                    console.log(idWallet)
+                    dispatch(toggleUpdateWallet());
+                    changeIsReload();
+                    changeDisplayDetailWallet();
                 })
                 .catch(err => console.log(err))
         }
@@ -115,7 +111,7 @@ function ModalUpdateWallet(prop) {
                                 style: 'normal',
                             }}
                         >
-                            {prop.dataUser.fields.totalMoney.integerValue}
+                            {dataUser.fields.totalMoney.integerValue}
                         </Typography>
                         <Typography
                             sx={{
@@ -125,7 +121,7 @@ function ModalUpdateWallet(prop) {
                                 style: 'normal',
                             }}
                         >
-                            {prop.dataUser.fields.currency.stringValue}
+                            {dataUser.fields.currency.stringValue}
                         </Typography>
                     </Box>
                 </Box>
@@ -152,7 +148,9 @@ function ModalUpdateWallet(prop) {
                             value={formik.values.totalMoney}
                             fullWidth
                             color="success"
-                            defaultValue={prop.dataUser.fields.totalMoney.integerValue}
+                            defaultValue={dataUser.fields.totalMoney.integerValue}
+                            error={formik.touched.totalMoney && Boolean(formik.errors.totalMoney)}
+                            helperText={formik.touched.totalMoney && formik.errors.totalMoney}
                         />
                     </Box>
                     <Box

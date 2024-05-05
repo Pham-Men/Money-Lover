@@ -15,9 +15,13 @@ const authSlice = createSlice({
         signOutAuth: (state) => {
             state.email = initialState.email;
             state.uid = initialState.uid;
-        }
+        },
+        setUserByLocalStorage: (state, action) => {
+            state.email = action.payload.email;
+            state.uid = action.payload.uid;
+        },
     }
 })
 
-export const { setUserLogin, signOutAuth } = authSlice.actions;
+export const { setUserLogin, signOutAuth, setUserByLocalStorage } = authSlice.actions;
 export default authSlice.reducer;

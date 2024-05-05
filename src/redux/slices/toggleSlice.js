@@ -6,6 +6,7 @@ const toggleSlice = createSlice({
         isOpenUpdateWallet: false,
         isOpenCreateWallet: false,
         isOpenTransferMoney: false,
+        isOpenDetailWallet: false,
     },
     reducers: {
         toggleUpdateWallet: (state) => {
@@ -16,9 +17,12 @@ const toggleSlice = createSlice({
         },
         toggleTransferMoney: (state) => {
             state.isOpenTransferMoney = !state.isOpenTransferMoney
+        },
+        toggleDetailWallet: (state) => {
+            state.isOpenDetailWallet = !state.isOpenDetailWallet
         }
     }
 });
 
-export const {toggleUpdateWallet, toggleCreateWallet, toggleTransferMoney} = toggleSlice.actions;
+export const {toggleUpdateWallet, toggleCreateWallet, toggleTransferMoney, toggleDetailWallet} = toggleSlice.actions;
 export default toggleSlice.reducer;
