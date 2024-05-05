@@ -5,7 +5,7 @@ import { bgGray, hoverGreen, primary } from "../../const/constCSS";
 import Wallet from '../../components/Wallet/Wallet';
 import CreateMyWallets from '../../components/CreateMyWallets/CreateMyWallets';
 
-import { useEffect, } from 'react';
+import { useEffect, useState, } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserData } from "../../redux/slices/dataUserSlice";
@@ -87,7 +87,7 @@ function MyWallets() {
                         open={stateisOpen.isOpenCreateWallet}
                         onClose={handleCloseCreateWallet}
                     >
-                        <CreateMyWallets />
+                        <CreateMyWallets/>
                     </Modal>
                 </Box>
                 <Box>
