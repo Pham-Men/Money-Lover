@@ -15,20 +15,12 @@ import { toggleUpdateWallet } from '../../redux/slices/toggleSlice'
 
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectorAuth } from '../../selector';
 import { selectorToggle } from '../../selector';
-import axios from 'axios';
-import { API_URL } from '../../const/const';
+import WalletService from '../../services/wallet.service';
 
 function Wallet({ dataUser }) {
 
-    console.log(dataUser)
-
-    const userAuth = useSelector(selectorAuth);
-    console.log(userAuth);
-
     const stateisOpen = useSelector(selectorToggle)
-    console.log(stateisOpen.isOpenUpdateWallet);
 
     const dispatch = useDispatch();
 
@@ -41,10 +33,10 @@ function Wallet({ dataUser }) {
     }
 
     const handleDelete = (ind) => {
-        axios.delete(`${API_URL}/${dataUser.data[ind].name}`)
+        const idWallet = (dataUser.data[ind].name.split('/')[dataUser.data[ind].name.split('/').length -1])
+        WalletService.deleteWallets(idWallet)
             .then(res => {
-                // console.log(res);
-                window.location.reload();
+                console.log(res);
             })
             .catch(err => console.log(err));
     }

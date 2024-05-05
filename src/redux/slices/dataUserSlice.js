@@ -14,4 +14,4 @@ const dataUserSlice = createSlice({
 })
 
 export const { setUserData } = dataUserSlice.actions;
-export default dataUserSlice.reducer
+export default dataUserSlice.reducer;

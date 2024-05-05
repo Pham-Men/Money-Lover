@@ -9,10 +9,9 @@ import TextField from '@mui/material/TextField';
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleUpdateWallet } from '../../redux/slices/toggleSlice';
-import axios from 'axios';
 
 import { selectordataUser } from '../../selector';
-import { firestoreUrl } from '../../const/const';
+import WalletService from '../../services/wallet.service';
 
 function ModalUpdateWallet(prop) {
     const dataUser = useSelector(selectordataUser);
@@ -29,20 +28,31 @@ function ModalUpdateWallet(prop) {
             totalMoney: ''
         },
         onSubmit: (values) => {
-            axios.patch
-                (
-                    `${firestoreUrl}/${idWallet}`,
-                    {
-                        fields: {
-                            name: { 'stringValue': dataUser.data[0].fields.name.stringValue },
-                            totalMoney: { 'integerValue': values.totalMoney },
-                            currency: { 'stringValue': dataUser.data[0].fields.currency.stringValue },
-                            uid: { 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }
-                        }
+            // axios.patch
+            //     (
+            //         `${firestoreUrl}/${idWallet}`,
+            //         {
+            //             fields: {
+            //                 name: { 'stringValue': dataUser.data[0].fields.name.stringValue },
+            //                 totalMoney: { 'integerValue': values.totalMoney },
+            //                 currency: { 'stringValue': dataUser.data[0].fields.currency.stringValue },
+            //                 uid: { 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }
+            //             }
+            //         }
+            //     )
+            WalletService.updateWallets(
+                idWallet,
+                {
+                    fields: {
+                        name: { 'stringValue': dataUser.data[0].fields.name.stringValue },
+                        totalMoney: { 'integerValue': values.totalMoney },
+                        currency: { 'stringValue': dataUser.data[0].fields.currency.stringValue },
+                        uid: { 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }
                     }
-                )
+                }
+            )
                 .then(() => {
-                    window.location.reload();
+                    console.log(idWallet)
                 })
                 .catch(err => console.log(err))
         }
