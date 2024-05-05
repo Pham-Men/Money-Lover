@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import Master from "../layouts/Master/Master";
 import Home from "../pages/Home/Home";
 import Register from "../pages/Register/Register";
@@ -8,8 +8,21 @@ import LogOut from "../pages/LogOut/LogOut";
 import Categories from "../pages/Categories/Categories";
 import ChangePassword from "../pages/ChangePassword/ChangePassword";
 import Transactions from "../pages/Transactions/Transactions";
+import { useSelector } from 'react-redux';
+import { selectorAuth } from "../selector";
+import { useEffect } from "react";
 
 function Router() {
+//   const userAuth = useSelector(selectorAuth);
+//   const naviagte = useNavigate()
+  
+//   useEffect(() => {
+//       if(!userAuth.uid) {
+//           naviagte("/auth")
+//       }
+//   }, [userAuth])
+
+
   return (
     <>
       <Routes path={"/"} element={<Master />}>
