@@ -34,7 +34,7 @@ function ModalUpdateWallet({ dataUser, changeIsReload, changeDisplayDetailWallet
                 .required('Required'),
         }),
         onSubmit: (values) => {
-            WalletService.updateWallets(
+            WalletService.updateWallet(
                 idWallet,
                 {
                     fields: {

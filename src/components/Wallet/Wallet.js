@@ -15,12 +15,14 @@ import { toggleUpdateWallet } from '../../redux/slices/toggleSlice';
 
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectorToggle } from '../../selector';
+import { selectorAuth, selectorToggle } from '../../selector';
 import WalletService from '../../services/wallet.service';
 
 function Wallet({wallets, changeIsReload}) {
 
-    const stateisOpen = useSelector(selectorToggle)
+    const stateisOpen = useSelector(selectorToggle);
+    const userAuth = useSelector(selectorAuth);
+    console.log(userAuth)
 
     const dispatch = useDispatch();
 
@@ -299,7 +301,7 @@ function Wallet({wallets, changeIsReload}) {
                                         backgroundColor: `${primary}`
                                     }}
                                 >
-                                    {JSON.parse(localStorage.getItem('userAuth')).email[0].toUpperCase()}
+                                    {wallets[indDetail].fields.name.stringValue[0].toUpperCase()}
                                 </Avatar>
                                 <Typography
                                     sx={{
@@ -310,7 +312,7 @@ function Wallet({wallets, changeIsReload}) {
                                         paddingLeft: '20px'
                                     }}
                                 >
-                                    {JSON.parse(localStorage.getItem('userAuth')).email}
+                                    {userAuth.email}
                                 </Typography>
                             </Box>
                         </Box>

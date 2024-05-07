@@ -9,25 +9,42 @@ import Categories from "../pages/Categories/Categories";
 import ChangePassword from "../pages/ChangePassword/ChangePassword";
 import Transactions from "../pages/Transactions/Transactions";
 import { useDispatch, useSelector } from 'react-redux';
-import { selectorAuth } from "../selector";
+import { selectorAuth, selectorWallets } from "../selector";
 import { useEffect } from "react";
 import { setUserByLocalStorage } from "../redux/slices/authSlice";
+import WalletService from "../services/wallet.service";
+import { setWalletsToRedux } from "../redux/slices/walletsSlice";
 
 function Router() {
-
-  
   const dispatch = useDispatch();
-  
+
+  const walletsByRedux = useSelector(selectorWallets);
+  // console.log(walletsByRedux)
+
+  if(!walletsByRedux.dataWallets) {
+    WalletService.getWallets()
+            .then(response => {
+                const wallets = response.data.documents.filter(item => (
+                    item.fields.uid.stringValue === JSON.parse(localStorage.getItem('userAuth')))
+                )
+                // console.log(wallets)
+                dispatch(setWalletsToRedux(wallets))
+            })
+            .catch(error => {
+                console.error(error);
+            });
+  }
+
   if (localStorage.getItem('userAuth')) {
     dispatch(setUserByLocalStorage(JSON.parse(localStorage.getItem('userAuth'))))
   }
   const userAuth = useSelector(selectorAuth);
   const naviagte = useNavigate()
-  
+
   useEffect(() => {
-      if(!userAuth.uid) {
-          naviagte("/auth")
-      }
+    if (!userAuth) {
+      naviagte("/auth")
+    }
   }, [])
 
   return (
@@ -40,7 +57,7 @@ function Router() {
         <Route path={"/logout"} element={<LogOut />} />
         <Route path={"/categories"} element={<Categories />} />
         <Route path={"/change-password"} element={<ChangePassword />} />
-        <Route path={'/transactions'} element={<Transactions/>}/>
+        <Route path={'/transactions'} element={<Transactions />} />
       </Routes>
     </>
   );

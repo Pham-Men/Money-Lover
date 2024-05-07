@@ -72,7 +72,7 @@ function CreateMyWallets({changeIsReload}) {
                             name: { 'stringValue': values.name },
                             totalMoney: { 'integerValue': values.totalMoney },
                             currency: { 'stringValue': values.currency },
-                            uid: { 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }
+                            uid: { 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid}
                         }
                     }
                 )
