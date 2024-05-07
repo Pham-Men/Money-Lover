@@ -52,10 +52,10 @@ function Register() {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       createUserWithEmailAndPassword(auth, values.email, values.password)
-        .then((userCredential) => {
+        .then((res) => {
           navigate("/my-wallets");
-          dispatch(setUserLogin(userCredential.user));
-          localStorage.setItem('userAuth', JSON.stringify(userCredential.user));
+          dispatch(setUserLogin(res.user));
+          localStorage.setItem('userAuth', JSON.stringify({uid: res.user.uid, email: res.user.email}));
         })
         .catch((error) => {
           console.log(error);

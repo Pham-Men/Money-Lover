@@ -15,11 +15,9 @@ const SignInGoogle = () => {
 
     const handleGoogleSignIn = () => {
       signInWithPopup(auth, provider)
-        .then((result) => {
-            console.log(result);
-          const user = result.user;
-          ditpatch(setUserLogin(user))
-          localStorage.setItem('userAuth', JSON.stringify(user));
+        .then((res) => {
+          ditpatch(setUserLogin(res.user))
+          localStorage.setItem('userAuth', JSON.stringify({uid: res.user.uid, email: res.user.email}));
           navigate("/");
         })
         .catch((error) => {

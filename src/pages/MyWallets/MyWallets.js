@@ -8,22 +8,27 @@ import CreateMyWallets from '../../components/CreateMyWallets/CreateMyWallets';
 import { useEffect, useState, } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { selectorToggle } from '../../selector';
+import { selectorToggle, selectorWallets } from '../../selector';
 
 import Modal from '@mui/material/Modal';
 import { toggleCreateWallet, toggleTransferMoney } from '../../redux/slices/toggleSlice';
 import BreadcrumbsComponent from '../../components/BreadcrubsComponent/BreadcrumbsComponent';
 import TransferMoney from "../../components/TransferMoney";
 import WalletService from "../../services/wallet.service";
+import { setWalletsToRedux } from "../../redux/slices/walletsSlice";
 
 function MyWallets() {
+
+    const walletsByRedux = useSelector(selectorWallets);
+    console.log(walletsByRedux);
+
     const [isReload, setIsReload] = useState(false);
 
     const handleReload = () => {
         setIsReload(!isReload);
     };
 
-    const [wallets, setWallets] = useState([]);
+    // const [wallets, setWallets] = useState([]);
     const stateisOpen = useSelector(selectorToggle);
 
     const dispatch = useDispatch();
@@ -50,15 +55,12 @@ function MyWallets() {
                 const wallets = response.data.documents.filter(item => (
                     item.fields.uid.stringValue === JSON.parse(localStorage.getItem('userAuth')).uid)
                 )
-                console.log(wallets)
-                setWallets(wallets)
+                dispatch(setWalletsToRedux(wallets))
             })
             .catch(error => {
                 console.error(error);
             });
     }, [isReload])
-
-    console.log(wallets)
 
     return (
         <>
@@ -119,7 +121,7 @@ function MyWallets() {
                         <TransferMoney />
                     </Modal>
                 </Box>
-                <Wallet wallets={wallets} changeIsReload={handleReload}/>
+                <Wallet wallets={walletsByRedux.dataWallets} changeIsReload={handleReload}/>
             </Box>
         </>
     )

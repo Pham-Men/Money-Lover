@@ -48,7 +48,7 @@ function BreadcrumbsComponent() {
                             style: 'normal'
                         }}
                     >
-                        My wallet
+                        Home
                     </Typography>
                 </Box>
             </Breadcrumbs>
