@@ -18,7 +18,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectorAuth, selectorToggle } from '../../selector';
 import WalletService from '../../services/wallet.service';
 
-function Wallet({wallets, changeIsReload}) {
+function Wallet({ wallets, changeIsReload }) {
 
     const stateisOpen = useSelector(selectorToggle);
     const userAuth = useSelector(selectorAuth);
@@ -39,12 +39,15 @@ function Wallet({wallets, changeIsReload}) {
     }
 
     const handleDelete = (ind) => {
-        const idWallet = (wallets[ind].name.split('/')[wallets[ind].name.split('/').length -1])
-        WalletService.deleteWallets(idWallet)
-            .then(() => {
-                changeIsReload()
-            })
-            .catch(err => console.log(err));
+        const isConfirmed = window.confirm('Are you sure you want to delete?');
+        if (isConfirmed) {
+            const idWallet = (wallets[ind].name.split('/')[wallets[ind].name.split('/').length - 1])
+            WalletService.deleteWallets(idWallet)
+                .then(() => {
+                    changeIsReload()
+                })
+                .catch(err => console.log(err));
+        }
     }
 
     const handleOpen = () => dispatch(toggleUpdateWallet());
@@ -119,7 +122,7 @@ function Wallet({wallets, changeIsReload}) {
                                         width: '38px',
                                         marginRight: '20px'
                                     }}
-                                    image='img/iconWallet.png'
+                                    image={item.fields.img.stringValue}
                                 />
 
                                 <Box>
@@ -157,7 +160,7 @@ function Wallet({wallets, changeIsReload}) {
                         </Box>
                     ))
                     }
-                    {!wallets.length && 
+                    {!wallets.length &&
                         <Typography
                             sx={{
                                 padding: '20px 0',
@@ -239,7 +242,7 @@ function Wallet({wallets, changeIsReload}) {
                                     width: '50px',
                                     marginRight: '36px'
                                 }}
-                                image='img/iconWallet.png'
+                                image={wallets[indDetail].fields.img.stringValue}
                             />
                             {wallets.length > 0 &&
                                 <Box>

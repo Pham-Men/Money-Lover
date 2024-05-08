@@ -41,6 +41,7 @@ function ModalUpdateWallet({ dataUser, changeIsReload, changeDisplayDetailWallet
                         name: { 'stringValue': dataUser.fields.name.stringValue },
                         totalMoney: { 'integerValue': values.totalMoney },
                         currency: { 'stringValue': dataUser.fields.currency.stringValue },
+                        img: { 'stringValue': dataUser.fields.img.stringValue },
                         uid: { 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }
                     }
                 }
@@ -99,7 +100,7 @@ function ModalUpdateWallet({ dataUser, changeIsReload, changeDisplayDetailWallet
                             width: '38px',
                             marginRight: '20px'
                         }}
-                        image='img/iconWallet.png'
+                        image={dataUser.fields.img.stringValue}
                     />
                     <Box>
                         <Typography
@@ -173,6 +174,7 @@ function ModalUpdateWallet({ dataUser, changeIsReload, changeDisplayDetailWallet
                             cancel
                         </Button>
                         <Button
+                            disabled={!formik.isValid}
                             sx={{
                                 backgroundColor: `${primary}`,
                                 color: 'white',

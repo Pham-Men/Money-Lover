@@ -18,16 +18,16 @@ import { firestoreUrl } from '../../const/const';
 import { toggleCreateWallet } from '../../redux/slices/toggleSlice';
 
 import * as Yup from 'yup';
+import { CardMedia } from '@mui/material';
 
 const images = [
-    { value: 'image', label: <img src="img/iconWallet.png" alt="Image" style={{ width: '26px' }} /> },
-    { value: 'image1', label: <img src="img/icon_1.png" alt="Image 1" style={{ width: '26px' }} /> },
-    { value: 'image2', label: <img src="img/icon_2.png" alt="Image 2" style={{ width: '26px' }} /> },
-    { value: 'image3', label: <img src="img/icon_3.png" alt="Image 3" style={{ width: '26px' }} /> },
-    { value: 'image4', label: <img src="img/icon_4.png" alt="Image 4" style={{ width: '26px' }} /> },
-    { value: 'image5', label: <img src="img/icon_5.png" alt="Image 5" style={{ width: '26px' }} /> },
-    { value: 'image6', label: <img src="img/icon_6.png" alt="Image 6" style={{ width: '26px' }} /> },
-    { value: 'image7', label: <img src="img/icon_7.png" alt="Image 7" style={{ width: '26px' }} /> },
+    { id: '1', title: "Sức khỏe", url: 'img/icon_1.png' },
+    { id: '2', title: "Ăn uống", url: 'img/icon_2.png' },
+    { id: '3', title: "Siêu thị", url: 'img/icon_3.png' },
+    { id: '4', title: "Học tập", url: 'img/icon_4.png' },
+    { id: '5', title: "Máy bay", url: 'img/icon_5.png' },
+    { id: '6', title: "Xem phim", url: 'img/icon_6.png' },
+    { id: '7', title: "Đi chợ", url: 'img/icon_7.png' },
 ];
 
 const currencys = [
@@ -37,7 +37,7 @@ const currencys = [
     { value: 'Yuan Renminbi', label: <img src="img/ic_currency_cny.png" alt="Image 4" style={{ width: '26px' }} />, text: 'Yuan Renminbi' },
 ];
 
-function CreateMyWallets({changeIsReload}) {
+function CreateMyWallets({ changeIsReload }) {
 
     const userAuth = useSelector(selectorAuth);
     console.log(userAuth);
@@ -48,7 +48,8 @@ function CreateMyWallets({changeIsReload}) {
         initialValues: {
             name: '',
             totalMoney: '',
-            currency: ''
+            currency: '',
+            img: ''
         },
         validationSchema: Yup.object({
             name: Yup
@@ -59,6 +60,9 @@ function CreateMyWallets({changeIsReload}) {
                 .typeError('Please enter number')
                 .required('Required'),
             currency: Yup
+                .string()
+                .required('Required'),
+            img: Yup
                 .string()
                 .required('Required'),
         }),
@@ -72,7 +76,8 @@ function CreateMyWallets({changeIsReload}) {
                             name: { 'stringValue': values.name },
                             totalMoney: { 'integerValue': values.totalMoney },
                             currency: { 'stringValue': values.currency },
-                            uid: { 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid}
+                            img: { 'stringValue': values.img },
+                            uid: { 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }
                         }
                     }
                 )
@@ -86,11 +91,9 @@ function CreateMyWallets({changeIsReload}) {
         }
     })
 
-    const [selectedImage, setSelectedImage] = useState('image');
-
-    const handleChange = (event) => {
-        setSelectedImage(event.target.value);
-    };
+    const handleCloseCreateWallet = () => {
+        dispatch(toggleCreateWallet())
+    }
 
 
     return (
@@ -99,7 +102,7 @@ function CreateMyWallets({changeIsReload}) {
                 <Box
                     sx={{
                         width: '500px',
-                        height: '390px',
+                        height: '440px',
                         border: '1px solid black',
                         margin: '110px auto',
                         borderRadius: '4px',
@@ -135,17 +138,24 @@ function CreateMyWallets({changeIsReload}) {
                             }}
                         >
                             <Select
+                                onChange={formik.handleChange}
+                                name='img'
+                                value={formik.values.img}
+                                error={formik.touched.img && Boolean(formik.errors.img)}
+                                helperText={formik.touched.img && formik.errors.img}
                                 sx={{
                                     width: '100%'
                                 }}
-                                labelId="image-select-label"
-                                id="image-select"
-                                value={selectedImage}
-                                onChange={handleChange}
                             >
                                 {images.map((image) => (
-                                    <MenuItem key={image.value} value={image.value}>
-                                        {image.label}
+                                    <MenuItem key={image.id} value={image.url}>
+                                        <CardMedia
+                                            component='img'
+                                            image={image.url}
+                                            sx={{
+                                                width: '26px'
+                                            }}
+                                        />
                                     </MenuItem>
                                 ))}
                             </Select>
@@ -249,7 +259,29 @@ function CreateMyWallets({changeIsReload}) {
                         }}
                     >
                         <Button
+                            onClick={handleCloseCreateWallet}
+                            sx={{
+                                marginTop: '36px',
+                                padding: '6px 12px',
+                                color: `${primary}`,
+                                backgroundColor: 'rgb(230, 230, 230)',
+                                marginRight: '36px',
+                                fontFamily: 'roboto, sans-serif',
+                                fontSize: '14px',
+                                fontWeight: '400',
+                                style: 'normal',
+                                '&:hover': {
+                                    backgroundColor: 'rgb(216, 233, 220)',
+                                    color: `${primary}`
+                                }
+                            }}
+                        >
+                            cancel
+
+                        </Button>
+                        <Button
                             type='submit'
+                            disabled={!formik.isValid}
                             sx={{
                                 marginTop: '36px',
                                 padding: '6px 12px',

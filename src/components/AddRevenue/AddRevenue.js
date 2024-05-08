@@ -15,7 +15,7 @@ import { selectorWallets } from '../../selector';
 import WalletService from '../../services/wallet.service';
 import { useNavigate } from 'react-router-dom';
 import { setWalletsToRedux } from '../../redux/slices/walletsSlice';
-import { ButtonBase } from '@mui/material';
+import { toggleRevenue } from '../../redux/slices/toggleSlice';
 
 function ModalAddRevenue() {
 
@@ -78,6 +78,10 @@ function ModalAddRevenue() {
                 })
         }
     });
+
+    const handleCloseRevenue = () => {
+        dispatch(toggleRevenue())
+    }
 
     const revenues = [
         { id: '1', title: "Lương về", url: 'img/icon_8.png' },
@@ -259,12 +263,14 @@ function ModalAddRevenue() {
                             }}
                         >
                             <Button
+                                onClick={handleCloseRevenue}
                                 sx={{
-                                    color: 'white',
-                                    backgroundColor: `${primary}`,
+                                    color: `${primary}`,
+                                    backgroundColor: 'rgb(230, 230, 230)',
+                                    marginRight: '36px',
                                     '&:hover': {
-                                        color: 'white',
-                                        backgroundColor: `${hoverGreen}`,
+                                        backgroundColor: 'rgb(216, 233, 220)',
+                                        color: `${primary}`
                                     }
                                 }}
                             >
@@ -272,6 +278,7 @@ function ModalAddRevenue() {
 
                             </Button>
                             <Button
+                                disabled={!formik.isValid}
                                 type='submit'
                                 sx={{
                                     color: 'white',

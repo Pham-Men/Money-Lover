@@ -15,6 +15,7 @@ import { selectorWallets } from '../../selector';
 import WalletService from '../../services/wallet.service';
 import { useNavigate } from 'react-router-dom';
 import { setWalletsToRedux } from '../../redux/slices/walletsSlice';
+import { toggleSpending } from '../../redux/slices/toggleSlice';
 
 function ModalExtraSpending() {
 
@@ -81,6 +82,10 @@ function ModalExtraSpending() {
                 })
         }
     });
+
+    const handleCloseSpending = () => {
+        dispatch(toggleSpending())
+    }
 
     const spendings = [
         { id: '1', title: "Sức khỏe", url: 'img/icon_1.png' },
@@ -267,6 +272,22 @@ function ModalExtraSpending() {
                             }}
                         >
                             <Button
+                                onClick={handleCloseSpending}
+                                sx={{
+                                    color: `${primary}`,
+                                    backgroundColor: 'rgb(230, 230, 230)',
+                                    marginRight: '36px',
+                                    '&:hover': {
+                                        backgroundColor: 'rgb(216, 233, 220)',
+                                        color: `${primary}`
+                                    }
+                                }}
+                            >
+                                cancel
+
+                            </Button>
+                            <Button
+                                disabled={!formik.isValid}
                                 type='submit'
                                 sx={{
                                     color: 'white',
