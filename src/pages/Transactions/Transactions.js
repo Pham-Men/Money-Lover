@@ -32,13 +32,13 @@ function Transactions() {
         dispatch(toggleSpending())
     }
 
-    const handleOpenRevenue = () => [
+    const handleOpenRevenue = () => {
         dispatch(toggleRevenue())
-    ]
+    }
 
-    const handleCloseRevenue = () => [
+    const handleCloseRevenue = () => {
         dispatch(toggleRevenue())
-    ]
+    }
 
     return (
         <>
@@ -71,7 +71,7 @@ function Transactions() {
                         open={stateToggle.isOpenSpending}
                         onClose={handleCloseSpending}
                     >
-                        <ModalExtraSpending/>
+                        <ModalExtraSpending />
                     </Modal>
                 </Box>
                 <Box>
@@ -96,7 +96,7 @@ function Transactions() {
                         open={stateToggle.isOpenRevenue}
                         onClose={handleCloseRevenue}
                     >
-                        <ModalAddRevenue/>
+                        <ModalAddRevenue />
                     </Modal>
                 </Box>
             </Box>

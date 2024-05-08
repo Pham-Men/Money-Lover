@@ -5,33 +5,118 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { hoverGreen, primary } from '../const/constCSS';
 import Button from '@mui/material/Button';
 import { useFormik } from 'formik';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectorWallets } from '../selector';
+import { TextField, Typography } from '@mui/material';
 
-function TransferMoney() {
-    const dataUserLocal = JSON.parse(localStorage.getItem('dataUser'));
-    console.log(dataUserLocal)
+import * as Yup from 'yup';
+import WalletService from '../services/wallet.service';
+import { toggleTransferMoney } from '../redux/slices/toggleSlice';
+import { useEffect } from 'react';
+import axios from 'axios';
+
+function TransferMoney({changeIsReload}) {
+
+    // console.log(changeIsReload)
+
+    const wallets = useSelector(selectorWallets);
+
+    const dispatch = useDispatch();
 
     const formik = useFormik({
         initialValues: {
-            moneyOut: '',
-            moneyIn: ''
+            idWalletOut: '',
+            idWalletIn: '',
+            number: ''
         },
+        validationSchema: Yup.object({
+            idWalletOut: Yup
+                .string()
+                .required('Required'),
+            idWalletIn: Yup
+                .string()
+                .required('Required'),
+            number: Yup
+                .number()
+                .typeError('Please enter number')
+                .required('Required'),
+        }),
         onSubmit: (values) => {
             console.log(values)
+            const walletOut = wallets.dataWallets.filter(
+                wallet => (wallet.name.split('/')[wallet.name.split('/').length - 1] === values.idWalletOut)
+            )
+            const walletIn = wallets.dataWallets.filter(
+                wallet => (wallet.name.split('/')[wallet.name.split('/').length - 1] === values.idWalletIn)
+            )
+            console.log(walletOut)
+            if (walletOut[0].fields.totalMoney.integerValue - values.number < 0) {
+                alert('Not enough money')
+            } else {
+                WalletService.updateWallet(
+                    values.idWalletOut,
+                    {
+                        fields: {
+                            name: { 'stringValue': walletOut[0].fields.name.stringValue },
+                            totalMoney: { 'integerValue': walletOut[0].fields.totalMoney.integerValue - values.number },
+                            currency: { 'stringValue': walletOut[0].fields.currency.stringValue },
+                            img: { 'stringValue': walletOut[0].fields.img.stringValue },
+                            uid: { 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }
+                        }
+                    }
+                )
+                    .then(() => { })
+                    .catch(err => console.log(err))
+                    changeIsReload()
+
+                WalletService.updateWallet(
+                    values.idWalletIn,
+                    {
+                        fields: {
+                            name: { 'stringValue': walletIn[0].fields.name.stringValue },
+                            totalMoney: { 'integerValue': parseInt(walletIn[0].fields.totalMoney.integerValue) + parseInt(values.number) },
+                            currency: { 'stringValue': walletIn[0].fields.currency.stringValue },
+                            img: { 'stringValue': walletIn[0].fields.img.stringValue },
+                            uid: { 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }
+                        }
+                    }
+                )
+                    .then(() => {})
+                    .catch(err => console.log(err))
+
+                dispatch(toggleTransferMoney())
+                changeIsReload()
+            }
+            changeIsReload()
         }
     })
+
+    // useEffect(() => {
+    //     axios.get('https://api.exchangeratesapi.io/latest?base=USD')
+    //     .then(res => console.log('data', res))
+    // }, [])
 
     return (
         <>
             <Box
                 sx={{
                     width: '500px',
-                    height: '160px',
+                    height: '360px',
                     border: '1px solid black',
                     margin: '110px auto',
                     borderRadius: '4px',
                     backgroundColor: 'white'
                 }}
             >
+                <Typography
+                    sx={{
+                        fontSize: '20px',
+                        color: `${primary}`,
+                        margin: '40px'
+                    }}
+                >
+                    Transfer Money
+                </Typography>
                 <form onSubmit={formik.handleSubmit}>
                     <Box
                         sx={{
@@ -43,20 +128,22 @@ function TransferMoney() {
                     >
                         <Select
                             onChange={formik.handleChange}
-                            name='moneyOut'
-                            value={formik.values.moneyOut}
+                            name='idWalletOut'
+                            value={formik.values.idWalletOut}
+                            error={formik.touched.idWalletOut && Boolean(formik.errors.idWalletOut)}
+                            helperText={formik.touched.idWalletOut && formik.errors.idWalletOut}
                             size='small'
                             sx={{
                                 width: '160px'
                             }}
                         >
-                            {dataUserLocal.map(itemDateUser => (
+                            {wallets.dataWallets.map(wallet => (
                                 <MenuItem
-                                    value={itemDateUser.name.split('/')[dataUserLocal[0].name.split('/').length - 1]}
+                                    value={wallet.name.split('/')[wallet.name.split('/').length - 1]}
                                 >
-                                    {itemDateUser.fields.totalMoney.integerValue}
+                                    {wallet.fields.totalMoney.integerValue}
                                     &nbsp;
-                                    {itemDateUser.fields.currency.stringValue}
+                                    {wallet.fields.currency.stringValue}
                                 </MenuItem>
                             ))}
                         </Select>
@@ -68,23 +155,50 @@ function TransferMoney() {
                         />
                         <Select
                             onChange={formik.handleChange}
-                            name='moneyIn'
-                            value={formik.values.moneyIn}
+                            name='idWalletIn'
+                            value={formik.values.idWalletIn}
+                            error={formik.touched.idWalletIn && Boolean(formik.errors.idWalletIn)}
+                            helperText={formik.touched.idWalletIn && formik.errors.idWalletIn}
                             size='small'
                             sx={{
                                 width: '160px'
                             }}
                         >
-                            {dataUserLocal.map(itemDateUser => (
+                            {wallets.dataWallets.filter((wallet) => (
+                                wallet.name.split('/')[wallet.name.split('/').length - 1] !== formik.values.idWalletOut
+                            )).map(idWalletIn => (
                                 <MenuItem
-                                    value={itemDateUser.name.split('/')[dataUserLocal[0].name.split('/').length - 1]}
+                                    value={idWalletIn.name.split('/')[idWalletIn.name.split('/').length - 1]}
                                 >
-                                    {itemDateUser.fields.totalMoney.integerValue}
+                                    {idWalletIn.fields.totalMoney.integerValue}
                                     &nbsp;
-                                    {itemDateUser.fields.currency.stringValue}
+                                    {idWalletIn.fields.currency.stringValue}
                                 </MenuItem>
                             ))}
                         </Select>
+                    </Box>
+                    <Box
+                        sx={{
+                            margin: '20px 36px',
+                            display: 'flex'
+                        }}
+                    >
+                        <Typography
+                            sx={{
+                                width: '350px'
+                            }}
+                        >
+                            Number money:
+                        </Typography>
+                        <TextField
+                            fullWidth
+                            onChange={formik.handleChange}
+                            value={formik.values.number}
+                            name='number'
+                            size='small'
+                            error={formik.touched.number && Boolean(formik.errors.number)}
+                            helperText={formik.touched.number && formik.errors.number}
+                        />
                     </Box>
                     <Box
                         sx={{
@@ -95,6 +209,7 @@ function TransferMoney() {
                         }}
                     >
                         <Button
+                            disabled={!formik.isValid}
                             type='submit'
                             sx={{
                                 backgroundColor: `${primary}`,

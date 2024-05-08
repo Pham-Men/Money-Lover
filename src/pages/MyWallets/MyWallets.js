@@ -118,7 +118,7 @@ function MyWallets() {
                         open={stateisOpen.isOpenTransferMoney}
                         onClose={handleCloseTransferMoney}
                     >
-                        <TransferMoney />
+                        <TransferMoney changeIsReload={handleReload}/>
                     </Modal>
                 </Box>
                 <Wallet wallets={walletsByRedux.dataWallets} changeIsReload={handleReload}/>
