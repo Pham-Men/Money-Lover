@@ -17,7 +17,11 @@ import TransferMoney from "../../components/TransferMoney";
 import WalletService from "../../services/wallet.service";
 import { setWalletsToRedux } from "../../redux/slices/walletsSlice";
 
+import styles from './Wallets.module.scss';
+
 function MyWallets() {
+    const loadding = useSelector((state) => state.toggle.isOpenLoading);
+    console.log(loadding, "day la ld");
 
     const walletsByRedux = useSelector(selectorWallets);
     console.log(walletsByRedux);
@@ -63,68 +67,92 @@ function MyWallets() {
     }, [isReload])
 
     return (
-        <>
-            <Box
-                sx={{
-                    backgroundColor: `${bgGray}`,
-                    minHeight: '100vh'
-                }}
+      <>
+        {loadding ? (
+          <div
+            className={
+              styles["loadding"] +
+              " position-fixed top-0 bottom-0 left-0 right-0 d-flex justify-content-center align-items-center"
+            }
+          >
+            <div className={styles["loadding-body"]}>
+              <div
+                className={styles["loadding-spinner"] + " spinner-border"}
+                role="status"
+              >
+                <span className="sr-only"></span>
+              </div>
+              <p>Loadding...</p>
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
+
+        <Box
+          sx={{
+            backgroundColor: `${bgGray}`,
+            minHeight: "100vh",
+          }}
+        >
+          <BreadcrumbsComponent />
+          <Box>
+            <Button
+              onClick={handleOpenCreateWallet}
+              sx={{
+                zIndex: "2",
+                position: "absolute",
+                right: "80px",
+                top: "14px",
+                backgroundColor: `${primary}`,
+                color: "white",
+                "&:hover": {
+                  backgroundColor: `${hoverGreen}`,
+                  color: "white",
+                },
+              }}
             >
-                <BreadcrumbsComponent />
-                <Box>
-                    <Button
-                        onClick={handleOpenCreateWallet}
-                        sx={{
-                            zIndex: '2',
-                            position: 'absolute',
-                            right: '80px',
-                            top: '14px',
-                            backgroundColor: `${primary}`,
-                            color: 'white',
-                            '&:hover': {
-                                backgroundColor: `${hoverGreen}`,
-                                color: 'white',
-                            }
-                        }}
-                    >
-                        Add Wallet
-                    </Button>
-                    <Modal
-                        open={stateisOpen.isOpenCreateWallet}
-                        onClose={handleCloseCreateWallet}
-                    >
-                        <CreateMyWallets changeIsReload={handleReload}/>
-                    </Modal>
-                </Box>
-                <Box>
-                    <Button
-                        onClick={handleOpenTransferMoney}
-                        sx={{
-                            zIndex: '2',
-                            position: 'absolute',
-                            right: '280px',
-                            top: '14px',
-                            backgroundColor: `${primary}`,
-                            color: 'white',
-                            '&:hover': {
-                                backgroundColor: `${hoverGreen}`,
-                                color: 'white',
-                            }
-                        }}
-                    >
-                        transfer money
-                    </Button>
-                    <Modal
-                        open={stateisOpen.isOpenTransferMoney}
-                        onClose={handleCloseTransferMoney}
-                    >
-                        <TransferMoney changeIsReload={handleReload}/>
-                    </Modal>
-                </Box>
-                <Wallet wallets={walletsByRedux.dataWallets} changeIsReload={handleReload}/>
-            </Box>
-        </>
-    )
+              Add Wallet
+            </Button>
+            <Modal
+              open={stateisOpen.isOpenCreateWallet}
+              onClose={handleCloseCreateWallet}
+            >
+              <CreateMyWallets changeIsReload={handleReload} />
+            </Modal>
+          </Box>
+          <Box>
+            <Button
+              onClick={handleOpenTransferMoney}
+              sx={{
+                zIndex: "2",
+                position: "absolute",
+                right: "280px",
+                top: "14px",
+                backgroundColor: `${primary}`,
+                color: "white",
+                "&:hover": {
+                  backgroundColor: `${hoverGreen}`,
+                  color: "white",
+                },
+              }}
+            >
+              transfer money
+            </Button>
+            <Modal
+              open={stateisOpen.isOpenTransferMoney}
+              onClose={handleCloseTransferMoney}
+            >
+              <TransferMoney changeIsReload={handleReload} />
+            </Modal>
+          </Box>
+          <Wallet
+            wallets={walletsByRedux.dataWallets}
+            changeIsReload={handleReload}
+          />
+        </Box>
+      </>
+    );
 }
 
 export default MyWallets;

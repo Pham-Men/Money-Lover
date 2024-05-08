@@ -18,6 +18,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectorAuth, selectorToggle } from '../../selector';
 import WalletService from '../../services/wallet.service';
 
+import { toggleLoading } from '../../redux/slices/toggleSlice';
+
 function Wallet({ wallets, changeIsReload }) {
 
     const stateisOpen = useSelector(selectorToggle);
@@ -40,13 +42,17 @@ function Wallet({ wallets, changeIsReload }) {
 
     const handleDelete = (ind) => {
         const isConfirmed = window.confirm('Are you sure you want to delete?');
+        dispatch(toggleLoading());
         if (isConfirmed) {
             const idWallet = (wallets[ind].name.split('/')[wallets[ind].name.split('/').length - 1])
             WalletService.deleteWallets(idWallet)
-                .then(() => {
-                    changeIsReload()
-                })
-                .catch(err => console.log(err));
+              .then(() => {
+                changeIsReload();
+              })
+              .catch((err) => console.log(err))
+              .finally(() => {
+                dispatch(toggleLoading());
+              });
         }
     }
 

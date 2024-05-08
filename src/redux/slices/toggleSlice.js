@@ -1,35 +1,39 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const toggleSlice = createSlice({
-    name: 'toggle',
-    initialState: {
-        isOpenUpdateWallet: false,
-        isOpenCreateWallet: false,
-        isOpenTransferMoney: false,
-        isOpenDetailWallet: false,
-        isOpenSpending: false,
-        isOpenRevenue: false,
+  name: "toggle",
+  initialState: {
+    isOpenUpdateWallet: false,
+    isOpenCreateWallet: false,
+    isOpenTransferMoney: false,
+    isOpenDetailWallet: false,
+    isOpenSpending: false,
+    isOpenRevenue: false,
+    isOpenLoading: false,
+  },
+  reducers: {
+    toggleUpdateWallet: (state) => {
+      state.isOpenUpdateWallet = !state.isOpenUpdateWallet;
     },
-    reducers: {
-        toggleUpdateWallet: (state) => {
-            state.isOpenUpdateWallet = !state.isOpenUpdateWallet
-        },
-        toggleCreateWallet: (state) => {
-            state.isOpenCreateWallet = !state.isOpenCreateWallet
-        },
-        toggleTransferMoney: (state) => {
-            state.isOpenTransferMoney = !state.isOpenTransferMoney
-        },
-        toggleDetailWallet: (state) => {
-            state.isOpenDetailWallet = !state.isOpenDetailWallet
-        },
-        toggleSpending: (state) => {
-            state.isOpenSpending = !state.isOpenSpending
-        },
-        toggleRevenue: (state) => {
-            state.isOpenRevenue = !state.isOpenRevenue
-        },
-    }
+    toggleCreateWallet: (state) => {
+      state.isOpenCreateWallet = !state.isOpenCreateWallet;
+    },
+    toggleTransferMoney: (state) => {
+      state.isOpenTransferMoney = !state.isOpenTransferMoney;
+    },
+    toggleDetailWallet: (state) => {
+      state.isOpenDetailWallet = !state.isOpenDetailWallet;
+    },
+    toggleSpending: (state) => {
+      state.isOpenSpending = !state.isOpenSpending;
+    },
+    toggleRevenue: (state) => {
+      state.isOpenRevenue = !state.isOpenRevenue;
+    },
+    toggleLoading: (state) => {
+      state.isOpenLoading = !state.isOpenLoading;
+    },
+  },
 });
 
 export const {
@@ -38,6 +42,7 @@ export const {
     toggleTransferMoney, 
     toggleDetailWallet, 
     toggleSpending,
-    toggleRevenue
+    toggleRevenue,
+    toggleLoading,
 } = toggleSlice.actions;
 export default toggleSlice.reducer;
