@@ -47,6 +47,7 @@ export const {
     toggleDetailWallet, 
     toggleSpending,
     toggleRevenue,
+    toggleLoading,
     toggleSharedWallet,
     toggleShareWallet,
 } = toggleSlice.actions;
