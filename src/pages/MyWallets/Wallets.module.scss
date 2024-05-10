@@ -1,0 +1,15 @@
+.loadding{
+    z-index:  999!important;
+    display: flex;
+    justify-content: center !important;
+    align-items: center !important;
+    top:0 !important;
+    left:0 !important;
+    right:0 !important;
+    bottom:0 !important;
+    background-color: rgb(212, 211, 211, 0.5);
+}
+.loadding-body{
+    text-align: center;
+    font-size: 30px;
+}
