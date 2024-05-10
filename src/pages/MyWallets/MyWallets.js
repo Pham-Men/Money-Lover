@@ -24,7 +24,6 @@ function MyWallets() {
     console.log(loadding, "day la ld");
 
     const walletsByRedux = useSelector(selectorWallets);
-    console.log(walletsByRedux);
 
     const [isReload, setIsReload] = useState(false);
 
@@ -56,13 +55,14 @@ function MyWallets() {
     useEffect(() => {
         WalletService.getWallets()
             .then(response => {
+                console.log(response)
                 const wallets = response.data.documents.filter(item => (
-                    item.fields.uid.stringValue === JSON.parse(localStorage.getItem('userAuth')).uid)
-                )
+                    item.fields.uid.arrayValue.values.some(i=>(i.stringValue === JSON.parse(localStorage.getItem('userAuth')).uid))
+                ))
                 dispatch(setWalletsToRedux(wallets))
             })
             .catch(error => {
-                console.error(error);
+                console.log(error);
             });
     }, [isReload])
 

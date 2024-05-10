@@ -6,8 +6,6 @@ import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button'
 
-import { useState } from 'react';
-
 import { hoverGreen, primary } from '../../const/constCSS';
 import { useFormik } from 'formik';
 
@@ -72,31 +70,27 @@ function CreateMyWallets({ changeIsReload }) {
                 .required('Required'),
         }),
         onSubmit: (values) => {
-            dispatch(toggleLoading());
-            console.log(values);
-            axios
-              .post(firestoreUrl, {
-                fields: {
-                  name: { stringValue: values.name },
-                  totalMoney: { integerValue: values.totalMoney },
-                  currency: { stringValue: values.currency },
-                  img: { stringValue: values.img },
-                  uid: {
-                    stringValue: JSON.parse(localStorage.getItem("userAuth"))
-                      .uid,
-                  },
-                },
-              })
-              .then(() => {
-                dispatch(toggleCreateWallet());
-                changeIsReload();
-              })
-              .catch((error) => {
-                console.error(error);
-              })
-              .finally(() => {
-                dispatch(toggleLoading());
-              });
+            console.log(values)
+            axios.post
+                (
+                    firestoreUrl,
+                    {
+                        fields: {
+                            name: { 'stringValue': values.name },
+                            totalMoney: { 'integerValue': values.totalMoney },
+                            currency: { 'stringValue': values.currency },
+                            img: { 'stringValue': values.img },
+                            uid: { 'arrayValue': { 'values': [{ 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }] } }
+                        }
+                    }
+                )
+                .then(() => {
+                    dispatch(toggleCreateWallet());
+                    changeIsReload();
+                })
+                .catch(error => {
+                    console.error(error);
+                });
         }
     })
 

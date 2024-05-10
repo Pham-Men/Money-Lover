@@ -12,8 +12,6 @@ import { TextField, Typography } from '@mui/material';
 import * as Yup from 'yup';
 import WalletService from '../services/wallet.service';
 import { toggleTransferMoney } from '../redux/slices/toggleSlice';
-import { useEffect } from 'react';
-import axios from 'axios';
 
 function TransferMoney({changeIsReload}) {
 
@@ -61,7 +59,8 @@ function TransferMoney({changeIsReload}) {
                             totalMoney: { 'integerValue': walletOut[0].fields.totalMoney.integerValue - values.number },
                             currency: { 'stringValue': walletOut[0].fields.currency.stringValue },
                             img: { 'stringValue': walletOut[0].fields.img.stringValue },
-                            uid: { 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }
+                            // uid: { 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }
+                            uid: { 'arrayValue': { 'values': [{ 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }] } }
                         }
                     }
                 )
@@ -77,7 +76,8 @@ function TransferMoney({changeIsReload}) {
                             totalMoney: { 'integerValue': parseInt(walletIn[0].fields.totalMoney.integerValue) + parseInt(values.number) },
                             currency: { 'stringValue': walletIn[0].fields.currency.stringValue },
                             img: { 'stringValue': walletIn[0].fields.img.stringValue },
-                            uid: { 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }
+                            // uid: { 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }
+                            uid: { 'arrayValue': { 'values': [{ 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }] } }
                         }
                     }
                 )
@@ -90,11 +90,6 @@ function TransferMoney({changeIsReload}) {
             changeIsReload()
         }
     })
-
-    // useEffect(() => {
-    //     axios.get('https://api.exchangeratesapi.io/latest?base=USD')
-    //     .then(res => console.log('data', res))
-    // }, [])
 
     return (
         <>
