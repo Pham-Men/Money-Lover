@@ -20,7 +20,6 @@ import { toggleSpending } from '../../redux/slices/toggleSlice';
 function ModalExtraSpending() {
 
     const walletsByRedux = useSelector(selectorWallets);
-    // console.log(walletsByRedux.dataWallets)
 
     const naviagte = useNavigate();
     const dispatch = useDispatch();
@@ -47,7 +46,6 @@ function ModalExtraSpending() {
             console.log(values)
             WalletService.getWallet(values.idWallet)
                 .then((res) => {
-                    // console.log(res.data.fields.totalMoney.integerValue)
                     const newTotalMoney = res.data.fields.totalMoney.integerValue - values.numberMoney;
                     if (newTotalMoney >= 0) {
                         WalletService.updateWallet(
@@ -57,7 +55,8 @@ function ModalExtraSpending() {
                                     name: { 'stringValue': res.data.fields.name.stringValue },
                                     totalMoney: { 'integerValue': newTotalMoney },
                                     currency: { 'stringValue': res.data.fields.currency.stringValue },
-                                    uid: { 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }
+                                    img: { 'stringValue': res.data.fields.img.stringValue },
+                                    uid: { 'arrayValue': { 'values': [{ 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }] } }
                                 }
                             }
                         )
@@ -65,9 +64,8 @@ function ModalExtraSpending() {
                                 WalletService.getWallets()
                                     .then(response => {
                                         const wallets = response.data.documents.filter(item => (
-                                            item.fields.uid.stringValue === JSON.parse(localStorage.getItem('userAuth')).uid)
+                                            item.fields.uid.arrayValue.values.stringValue === JSON.parse(localStorage.getItem('userAuth')).uid)
                                         )
-                                        // console.log(wallets)
                                         dispatch(setWalletsToRedux(wallets))
                                     })
                                     .catch(error => {

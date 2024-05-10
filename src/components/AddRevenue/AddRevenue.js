@@ -20,7 +20,6 @@ import { toggleRevenue } from '../../redux/slices/toggleSlice';
 function ModalAddRevenue() {
 
     const walletsByRedux = useSelector(selectorWallets);
-    // console.log(walletsByRedux.dataWallets)
 
     const naviagte = useNavigate();
     const dispatch = useDispatch();
@@ -47,7 +46,6 @@ function ModalAddRevenue() {
             console.log(values)
             WalletService.getWallet(values.idWallet)
                 .then((res) => {
-                    // console.log(res.data.fields.totalMoney.integerValue)
                     const newTotalMoney = parseInt(res.data.fields.totalMoney.integerValue) + parseInt(values.numberMoney);
                     WalletService.updateWallet(
                         values.idWallet,
@@ -56,7 +54,8 @@ function ModalAddRevenue() {
                                 name: { 'stringValue': res.data.fields.name.stringValue },
                                 totalMoney: { 'integerValue': newTotalMoney },
                                 currency: { 'stringValue': res.data.fields.currency.stringValue },
-                                uid: { 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }
+                                img: { 'stringValue': res.data.fields.img.stringValue },
+                                uid: { 'arrayValue': { 'values': [{ 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }] } }
                             }
                         }
                     )
@@ -64,9 +63,8 @@ function ModalAddRevenue() {
                             WalletService.getWallets()
                                 .then(response => {
                                     const wallets = response.data.documents.filter(item => (
-                                        item.fields.uid.stringValue === JSON.parse(localStorage.getItem('userAuth')).uid)
+                                        item.fields.uid.arrayValue.values.stringValue === JSON.parse(localStorage.getItem('userAuth')).uid)
                                     )
-                                    // console.log(wallets)
                                     dispatch(setWalletsToRedux(wallets))
                                 })
                                 .catch(error => {

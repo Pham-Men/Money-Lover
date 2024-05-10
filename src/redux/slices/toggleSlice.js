@@ -9,6 +9,8 @@ const toggleSlice = createSlice({
         isOpenDetailWallet: false,
         isOpenSpending: false,
         isOpenRevenue: false,
+        isOpenShareWallet: false,
+        isOpenSharedWallet: false,
     },
     reducers: {
         toggleUpdateWallet: (state) => {
@@ -29,6 +31,12 @@ const toggleSlice = createSlice({
         toggleRevenue: (state) => {
             state.isOpenRevenue = !state.isOpenRevenue
         },
+        toggleShareWallet: (state) => {
+            state.isOpenShareWallet = !state.isOpenShareWallet
+        },
+        toggleSharedWallet: (state) => {
+            state.isOpenSharedWallet = !state.isOpenSharedWallet
+        },
     }
 });
 
@@ -38,6 +46,8 @@ export const {
     toggleTransferMoney, 
     toggleDetailWallet, 
     toggleSpending,
-    toggleRevenue
+    toggleRevenue,
+    toggleSharedWallet,
+    toggleShareWallet,
 } = toggleSlice.actions;
 export default toggleSlice.reducer;

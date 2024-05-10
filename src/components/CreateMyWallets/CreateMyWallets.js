@@ -6,8 +6,6 @@ import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button'
 
-import { useState } from 'react';
-
 import { hoverGreen, primary } from '../../const/constCSS';
 import { useFormik } from 'formik';
 
@@ -77,7 +75,7 @@ function CreateMyWallets({ changeIsReload }) {
                             totalMoney: { 'integerValue': values.totalMoney },
                             currency: { 'stringValue': values.currency },
                             img: { 'stringValue': values.img },
-                            uid: { 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }
+                            uid: { 'arrayValue': { 'values': [{ 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }] } }
                         }
                     }
                 )

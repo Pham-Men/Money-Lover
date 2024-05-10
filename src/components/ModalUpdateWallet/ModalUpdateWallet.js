@@ -12,14 +12,13 @@ import { toggleUpdateWallet } from '../../redux/slices/toggleSlice';
 import WalletService from '../../services/wallet.service';
 
 import * as Yup from 'yup';
+import { getWalletId } from '../../const/const';
 
 
 
 function ModalUpdateWallet({ dataUser, changeIsReload, changeDisplayDetailWallet }) {
 
-    const url = dataUser.name;
-    const length = url.split('/').length;
-    const idWallet = url.split('/')[length - 1]
+    const idWallet = getWalletId(dataUser)
 
     const dispatch = useDispatch();
 
@@ -42,7 +41,7 @@ function ModalUpdateWallet({ dataUser, changeIsReload, changeDisplayDetailWallet
                         totalMoney: { 'integerValue': values.totalMoney },
                         currency: { 'stringValue': dataUser.fields.currency.stringValue },
                         img: { 'stringValue': dataUser.fields.img.stringValue },
-                        uid: { 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }
+                        uid: { 'arrayValue': { 'values': [{ 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }] } }
                     }
                 }
             )

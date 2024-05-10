@@ -18,22 +18,7 @@ import { setWalletsToRedux } from "../redux/slices/walletsSlice";
 function Router() {
   const dispatch = useDispatch();
 
-  const walletsByRedux = useSelector(selectorWallets);
-  // console.log(walletsByRedux)
-
-  if(!walletsByRedux.dataWallets) {
-    WalletService.getWallets()
-            .then(response => {
-                const wallets = response.data.documents.filter(item => (
-                    item.fields.uid.stringValue === JSON.parse(localStorage.getItem('userAuth')))
-                )
-                // console.log(wallets)
-                dispatch(setWalletsToRedux(wallets))
-            })
-            .catch(error => {
-                console.error(error);
-            });
-  }
+  
 
   if (localStorage.getItem('userAuth')) {
     dispatch(setUserByLocalStorage(JSON.parse(localStorage.getItem('userAuth'))))
@@ -46,6 +31,23 @@ function Router() {
       naviagte("/auth")
     }
   }, [])
+
+  const walletsByRedux = useSelector(selectorWallets);
+
+  if(!walletsByRedux.dataWallets.length > 0) {
+    WalletService.getWallets()
+            .then(response => {
+              console.log(response)
+                const wallets = response.data.documents.filter(item => (
+                    item.fields.uid.arrayValue.values.some(i=>(i.stringValue === JSON.parse(localStorage.getItem('userAuth')).uid))
+                ))
+                console.log(wallets)
+                dispatch(setWalletsToRedux(wallets))
+            })
+            .catch(error => {
+                console.error(error);
+            });
+  }
 
   return (
     <>

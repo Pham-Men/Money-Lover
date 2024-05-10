@@ -8,26 +8,36 @@ import Avatar from '@mui/material/Avatar';
 
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ShareIcon from '@mui/icons-material/Share';
 
 import { primary, textGrey } from '../../const/constCSS';
 import ModalUpdateWallet from '../ModalUpdateWallet/ModalUpdateWallet';
-import { toggleUpdateWallet } from '../../redux/slices/toggleSlice';
+import { toggleShareWallet, toggleUpdateWallet } from '../../redux/slices/toggleSlice';
 
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectorAuth, selectorToggle } from '../../selector';
 import WalletService from '../../services/wallet.service';
+import { Tooltip } from '@mui/material';
+import { getWalletId } from '../../const/const';
+import ModalSharedWallet from '../ModalSharedWallet/ModalSharedWallet';
 
 function Wallet({ wallets, changeIsReload }) {
 
     const stateisOpen = useSelector(selectorToggle);
     const userAuth = useSelector(selectorAuth);
-    console.log(userAuth)
 
     const dispatch = useDispatch();
 
     const [display, setDisplay] = useState(false);
     const [indDetail, setIndDetail] = useState();
+
+    const getListWalletIdShare = () => {
+        const listWalletShare = wallets.filter(wallet => (
+            wallet.fields.uid.arrayValue.values.some(item => (item.stringValue !== userAuth.uid))
+        ))
+        return listWalletShare.map(walletShare => (getWalletId(walletShare)))
+    }
 
     const changeDisplayDetailWallet = () => {
         setDisplay(!display)
@@ -41,7 +51,7 @@ function Wallet({ wallets, changeIsReload }) {
     const handleDelete = (ind) => {
         const isConfirmed = window.confirm('Are you sure you want to delete?');
         if (isConfirmed) {
-            const idWallet = (wallets[ind].name.split('/')[wallets[ind].name.split('/').length - 1])
+            const idWallet = getWalletId(wallets[ind]);
             WalletService.deleteWallets(idWallet)
                 .then(() => {
                     changeIsReload()
@@ -52,6 +62,9 @@ function Wallet({ wallets, changeIsReload }) {
 
     const handleOpen = () => dispatch(toggleUpdateWallet());
     const handleClose = () => dispatch(toggleUpdateWallet());
+
+    const handleOpenShareWallet = () => dispatch(toggleShareWallet())
+    const handleCloseShareWallet = () => dispatch(toggleShareWallet())
 
     return (
         <>
@@ -149,14 +162,58 @@ function Wallet({ wallets, changeIsReload }) {
                                     </Typography>
                                 </Box>
                             </Box>
-                            <DeleteIcon
-                                onClick={() => handleDelete(ind)}
-                                color='success'
-                                sx={{
-                                    marginRight: '20px',
-                                    cursor: 'pointer'
-                                }}
-                            />
+                            <Box>
+                                {wallets.length > 0 && getListWalletIdShare().map(walletIdShare => (walletIdShare === getWalletId(item)) ? (
+                                    <Tooltip
+                                        title='Shared wallet'
+                                        placement='top'
+                                    >
+                                        <ShareIcon
+                                            color='warning'
+                                            sx={{
+                                                marginRight: '40px',
+                                                cursor: 'pointer'
+                                            }}
+                                        />
+                                    </Tooltip>
+                                ) : (
+                                    <Tooltip
+                                        title='Share wallet'
+                                        placement='top'
+                                    >
+                                        <ShareIcon
+                                            onClick={handleOpenShareWallet}
+                                            color='success'
+                                            sx={{
+                                                marginRight: '40px',
+                                                cursor: 'pointer'
+                                            }}
+                                        />
+                                    </Tooltip>
+                                ))}
+                                <Modal
+                                    open={stateisOpen.isOpenShareWallet}
+                                    onClose={handleCloseShareWallet}
+                                >
+                                    <ModalSharedWallet
+                                        changeIsReload={changeIsReload}
+                                        ind={ind}
+                                    />
+                                </Modal>
+                                <Tooltip
+                                    title='Delete'
+                                    placement='top'
+                                >
+                                    <DeleteIcon
+                                        onClick={() => handleDelete(ind)}
+                                        color='success'
+                                        sx={{
+                                            marginRight: '20px',
+                                            cursor: 'pointer'
+                                        }}
+                                    />
+                                </Tooltip>
+                            </Box>
                         </Box>
                     ))
                     }
@@ -453,7 +510,7 @@ function Wallet({ wallets, changeIsReload }) {
 
                     </Box>
                 }
-            </Box>
+            </Box >
         </>
     )
 }
