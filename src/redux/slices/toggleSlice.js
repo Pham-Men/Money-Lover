@@ -44,7 +44,7 @@ export const {
     toggleUpdateWallet, 
     toggleCreateWallet, 
     toggleTransferMoney, 
-    toggleDetailWallet, 
+    toggleDetailWallet,
     toggleSpending,
     toggleRevenue,
     toggleLoading,

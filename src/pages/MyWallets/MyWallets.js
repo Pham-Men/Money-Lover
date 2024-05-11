@@ -55,7 +55,6 @@ function MyWallets() {
     useEffect(() => {
         WalletService.getWallets()
             .then(response => {
-                console.log(response)
                 const wallets = response.data.documents.filter(item => (
                     item.fields.uid.arrayValue.values.some(i=>(i.stringValue === JSON.parse(localStorage.getItem('userAuth')).uid))
                 ))
