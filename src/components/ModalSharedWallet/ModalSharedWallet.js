@@ -6,31 +6,32 @@ import { useFormik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleShareWallet } from "../../redux/slices/toggleSlice";
 import WalletService from "../../services/wallet.service";
-import { selectorWallets } from "../../selector";
+import { selectorAuth } from "../../selector";
 import { getWalletId } from "../../const/const";
 import { setWalletsToRedux } from "../../redux/slices/walletsSlice";
 import { useEffect, useState } from "react";
 
-function ModalSharedWallet({ ind, changeIsReload }) {
+function ModalSharedWallet({ walletShared, changeIsReload }) {
+
+    const userAuth = useSelector(selectorAuth);
 
     const [arrUid, setArrUid] = useState();
 
     useEffect(() => {
         WalletService.getWallets()
             .then(res => {
-                console.log(res)
                 const listWallet = res.data.documents
                 const result = listWallet.map(wallet => (
                     wallet.fields.uid.arrayValue.values.map(item => item.stringValue))
                 )
                 const arrayUidRepeat = result.reduce((acc, arr) => acc.concat(arr), []);
-                setArrUid(Array.from(new Set(arrayUidRepeat)))
+                const arrUidNorepeat = Array.from(new Set(arrayUidRepeat));
+                setArrUid(arrUidNorepeat.filter(uid => (uid !== userAuth.uid)))
             })
             .catch()
     })
 
-    const wallets = useSelector(selectorWallets);
-    const idWalletShare = getWalletId(wallets.dataWallets[ind])
+    const idWalletShare = getWalletId(walletShared)
 
     const dispatch = useDispatch();
 
@@ -49,10 +50,10 @@ function ModalSharedWallet({ ind, changeIsReload }) {
                     idWalletShare,
                     {
                         fields: {
-                            name: { 'stringValue': wallets.dataWallets[ind].fields.name.stringValue },
-                            totalMoney: { 'integerValue': wallets.dataWallets[ind].fields.totalMoney.integerValue },
-                            currency: { 'stringValue': wallets.dataWallets[ind].fields.currency.stringValue },
-                            img: { 'stringValue': wallets.dataWallets[ind].fields.img.stringValue },
+                            name: { 'stringValue': walletShared.fields.name.stringValue },
+                            totalMoney: { 'integerValue': walletShared.fields.totalMoney.integerValue },
+                            currency: { 'stringValue': walletShared.fields.currency.stringValue },
+                            img: { 'stringValue': walletShared.fields.img.stringValue },
                             uid: {
                                 'arrayValue': {
                                     'values': [
