@@ -18,11 +18,13 @@ import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectorAuth, selectorToggle } from '../../selector';
 import WalletService from '../../services/wallet.service';
-import { Tooltip } from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
 import { getWalletId } from '../../const/const';
 import ModalSharedWallet from '../ModalSharedWallet/ModalSharedWallet';
 
 import { toggleLoading } from '../../redux/slices/toggleSlice';
+
+import './Wallet.css';
 
 function Wallet({ wallets, changeIsReload }) {
 
@@ -34,6 +36,7 @@ function Wallet({ wallets, changeIsReload }) {
     const [display, setDisplay] = useState(false);
     const [indDetail, setIndDetail] = useState();
     const [walletSharedId, setWalletSharedId] = useState();
+    // const [isDisabled, setIsDisabled] = useState(false);
 
     const getListWalletIdShare = () => {
         const listWalletShare = wallets.filter(wallet => (
@@ -175,7 +178,7 @@ function Wallet({ wallets, changeIsReload }) {
                             <Box>
                                 {wallets.length > 0 && getListWalletIdShare().map(walletIdShare => (walletIdShare === getWalletId(item)) ? (
                                     <Tooltip
-                                        title='Shared wallet'
+                                        title='Delete Shared wallet'
                                         placement='top'
                                     >
                                         <ShareIcon
@@ -187,35 +190,34 @@ function Wallet({ wallets, changeIsReload }) {
                                         />
                                     </Tooltip>
                                 ) : (
-                                    <Tooltip
-                                        title='Share wallet'
-                                        placement='top'
-                                    >
-                                        <ShareIcon
-                                            onClick={() => handleOpenShareWallet(ind)}
-                                            color='success'
-                                            sx={{
-                                                marginRight: '40px',
-                                                cursor: 'pointer'
-                                            }}
-                                        />
-                                    </Tooltip>
+                                    <></>
                                 ))}
-                                {wallets.length > 0 && getListWalletIdShare().length <= 0 &&
-                                    <Tooltip
-                                        title='Share wallet'
-                                        placement='top'
+
+                                <Tooltip
+                                    title={wallets.length > 0 && getListWalletIdShare().map(walletIdShare => (walletIdShare === getWalletId(item)) ? 
+                                        'NoShare Wallet'
+                                     : 
+                                        'Share Wallet'
+                                    )}
+                                    placement='top'
+                                >
+                                    <IconButton
+                                        disabled={wallets.length > 0 && getListWalletIdShare().some(walletIdShare => (walletIdShare === getWalletId(item))
+                                        )}
+                                        onClick={() => handleOpenShareWallet(ind)}
+                                        sx={{
+                                            marginRight: '40px',
+                                        }}
                                     >
                                         <ShareIcon
-                                            onClick={() => handleOpenShareWallet(ind)}
-                                            color='success'
-                                            sx={{
-                                                marginRight: '40px',
-                                                cursor: 'pointer'
-                                            }}
+                                            className={wallets.length > 0 && getListWalletIdShare().map(walletIdShare => (walletIdShare === getWalletId(item)) ? 
+                                                'disabledIconShare'
+                                            : 
+                                                'iconShare'
+                                            )}
                                         />
-                                    </Tooltip>
-                                }
+                                    </IconButton>
+                                </Tooltip>
                                 <Modal
                                     open={stateisOpen.isOpenShareWallet}
                                     onClose={handleCloseShareWallet}

@@ -1,0 +1,8 @@
+.disabledIconShare {
+    cursor: default;
+    color: rgb(112, 112, 135);
+}
+.iconShare {
+    cursor: pointer;
+    color: rgb(0, 188, 42);
+}
