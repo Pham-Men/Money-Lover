@@ -13,15 +13,24 @@ import Button from '@mui/material/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectorWallets } from '../../selector';
 import WalletService from '../../services/wallet.service';
-import { useNavigate } from 'react-router-dom';
 import { setWalletsToRedux } from '../../redux/slices/walletsSlice';
 import { toggleSpending } from '../../redux/slices/toggleSlice';
 
-function ModalExtraSpending() {
+function ModalExtraSpending({changeIsReload}) {
+
+    const spendings = [
+        { id: '1', title: "Sức khỏe", url: 'img/icon_1.png' },
+        { id: '2', title: "Ăn uống", url: 'img/icon_2.png' },
+        { id: '3', title: "Siêu thị", url: 'img/icon_3.png' },
+        { id: '4', title: "Học tập", url: 'img/icon_4.png' },
+        { id: '5', title: "Máy bay", url: 'img/icon_5.png' },
+        { id: '6', title: "Xem phim", url: 'img/icon_6.png' },
+        { id: '7', title: "Đi chợ", url: 'img/icon_7.png' },
+    ];
+
 
     const walletsByRedux = useSelector(selectorWallets);
 
-    const naviagte = useNavigate();
     const dispatch = useDispatch();
 
     const formik = useFormik({
@@ -46,8 +55,26 @@ function ModalExtraSpending() {
             console.log(values)
             WalletService.getWallet(values.idWallet)
                 .then((res) => {
+                    console.log(res.data.fields.img.stringValue)
                     const newTotalMoney = res.data.fields.totalMoney.integerValue - values.numberMoney;
                     if (newTotalMoney >= 0) {
+                        WalletService.addTransaction(
+                            {
+                                fields: {
+                                    typeof: { 'stringValue': 'spending' },
+                                    numberMoney: { 'integerValue': values.numberMoney },
+                                    currency: res.data.fields.currency,
+                                    img: { 'stringValue': values.url },
+                                    uid: { 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid },
+                                    idWallet: { 'stringValue': values.idWallet }
+                                }
+                            }
+                        )
+                        .then(() => {
+                            alert('added successful transaction')
+                            changeIsReload()
+                        })
+                        .catch()
                         WalletService.updateWallet(
                             values.idWallet,
                             {
@@ -71,29 +98,19 @@ function ModalExtraSpending() {
                                     .catch(error => {
                                         console.error(error);
                                     });
-                                naviagte('/my-wallets')
                             })
                             .catch(err => console.log(err))
                     } else {
                         alert('Budget is not enough')
                     }
                 })
+                dispatch(toggleSpending())
         }
     });
 
     const handleCloseSpending = () => {
         dispatch(toggleSpending())
     }
-
-    const spendings = [
-        { id: '1', title: "Sức khỏe", url: 'img/icon_1.png' },
-        { id: '2', title: "Ăn uống", url: 'img/icon_2.png' },
-        { id: '3', title: "Siêu thị", url: 'img/icon_3.png' },
-        { id: '4', title: "Học tập", url: 'img/icon_4.png' },
-        { id: '5', title: "Máy bay", url: 'img/icon_5.png' },
-        { id: '6', title: "Xem phim", url: 'img/icon_6.png' },
-        { id: '7', title: "Đi chợ", url: 'img/icon_7.png' },
-    ];
 
     return (
         <>
@@ -153,7 +170,7 @@ function ModalExtraSpending() {
                                 {spendings.map((spending, ind) => (
                                     <MenuItem
                                         key={ind}
-                                        value={spending.title}
+                                        value={spending.url}
                                     >
                                         <Box
                                             sx={{

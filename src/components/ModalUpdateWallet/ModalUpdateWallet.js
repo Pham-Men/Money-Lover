@@ -37,10 +37,10 @@ function ModalUpdateWallet({ dataUser, changeIsReload, changeDisplayDetailWallet
                 idWallet,
                 {
                     fields: {
-                        name: { 'stringValue': dataUser.fields.name.stringValue },
+                        name: dataUser.fields.name,
                         totalMoney: { 'integerValue': values.totalMoney },
-                        currency: { 'stringValue': dataUser.fields.currency.stringValue },
-                        img: { 'stringValue': dataUser.fields.img.stringValue },
+                        currency: dataUser.fields.currency,
+                        img: dataUser.fields.img,
                         uid: { 'arrayValue': { 'values': [{ 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }] } }
                     }
                 }

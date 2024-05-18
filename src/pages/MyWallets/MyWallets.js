@@ -18,13 +18,10 @@ import WalletService from "../../services/wallet.service";
 import { setWalletsToRedux } from "../../redux/slices/walletsSlice";
 
 import styles from './Wallets.module.scss';
-import { Typography } from "@mui/material";
 
 function MyWallets() {
-  const loadding = useSelector((state) => state.toggle.isOpenLoading);
+  const loadding = useSelector((state) => state.toggle.loadding);
   console.log(loadding, "day la ld");
-
-  const walletsByRedux = useSelector(selectorWallets);
 
   const [isReload, setIsReload] = useState(false);
 
@@ -146,7 +143,6 @@ function MyWallets() {
           </Modal>
         </Box>
         <Wallet
-          // wallets={walletsByRedux.dataWallets}
           changeIsReload={handleReload}
         />
       </Box>
