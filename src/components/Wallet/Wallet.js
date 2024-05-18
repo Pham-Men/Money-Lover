@@ -29,6 +29,7 @@ import './Wallet.css';
 function Wallet({ changeIsReload }) {
 
     const wallets = useSelector(selectorWallets).dataWallets;
+    console.log(wallets)
 
     const stateisOpen = useSelector(selectorToggle);
     const userAuth = useSelector(selectorAuth);
@@ -65,9 +66,9 @@ function Wallet({ changeIsReload }) {
                     changeIsReload();
                 })
                 .catch((err) => console.log(err))
-            // .finally(() => {
-            //     dispatch(toggleLoading());
-            // });
+                .finally(() => {
+                    dispatch(toggleLoading());
+                });
         }
     }
 
@@ -87,10 +88,10 @@ function Wallet({ changeIsReload }) {
                 getWalletId(wallets[ind]),
                 {
                     fields: {
-                        name: { 'stringValue': wallets[ind].fields.name.stringValue },
-                        totalMoney: { 'integerValue': wallets[ind].fields.totalMoney.integerValue },
-                        currency: { 'stringValue': wallets[ind].fields.currency.stringValue },
-                        img: { 'stringValue': wallets[ind].fields.img.stringValue },
+                        name: wallets[ind].fields.name,
+                        totalMoney: wallets[ind].fields.totalMoney,
+                        currency: wallets[ind].fields.currency,
+                        img: wallets[ind].fields.img,
                         uid: {
                             'arrayValue': {
                                 'values': [
@@ -206,7 +207,7 @@ function Wallet({ changeIsReload }) {
                                 </Box>
                             </Box>
                             <Box>
-                                {wallets.length > 0 && getListWalletIdShare().length > 0 && getListWalletIdShare().some(walletIdShare => (walletIdShare) === getWalletId(item)) ? (
+                                {getListWalletIdShare().some(walletIdShare => (walletIdShare) === getWalletId(item)) ? (
                                     <Tooltip
                                         title='Delete Shared wallet'
                                         placement='top'
@@ -225,7 +226,7 @@ function Wallet({ changeIsReload }) {
                                 ) : (
                                     <></>
                                 )}
-                                {wallets.length > 0 && getListWalletIdShare().length >0 && getListWalletIdShare().some(walletIdShare => (walletIdShare) === getWalletId(item)) ? (
+                                {getListWalletIdShare().some(walletIdShare => (walletIdShare) === getWalletId(item)) ? (
                                     <Tooltip
                                         title='No Share Wallet'
                                         placement='top'

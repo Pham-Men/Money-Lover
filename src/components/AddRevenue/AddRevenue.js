@@ -47,6 +47,20 @@ function ModalAddRevenue() {
             WalletService.getWallet(values.idWallet)
                 .then((res) => {
                     const newTotalMoney = parseInt(res.data.fields.totalMoney.integerValue) + parseInt(values.numberMoney);
+                    WalletService.addTransaction(
+                        {
+                            fields: {
+                                typeof: { 'stringValue': 'revenue' },
+                                numberMoney: { 'integerValue': values.numberMoney },
+                                currency: { 'stringValue': res.data.fields.currency.stringValue },
+                                img: { 'stringValue': res.data.fields.img.stringValue },
+                                uid: { 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid },
+                                idWallet: { 'stringValue': values.idWallet }
+                            }
+                        }
+                    )
+                    .then(() => alert('added successful transaction'))
+                    .catch()
                     WalletService.updateWallet(
                         values.idWallet,
                         {
