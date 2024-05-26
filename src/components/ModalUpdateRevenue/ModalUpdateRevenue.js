@@ -14,24 +14,12 @@ import WalletService from '../../services/wallet.service';
 import { getTransactionId } from '../../const/const';
 import { toggleIsOpenUpdateSpending } from '../../redux/slices/toggleSlice';
 
-function ModalUpdateSpending({ indSpending, changeIsReload }) {
+function ModalUpdateRevenue() {
 
-
-    const spendings = [
-        { id: '1', title: "Sức khỏe", url: 'img/icon_1.png' },
-        { id: '2', title: "Ăn uống", url: 'img/icon_2.png' },
-        { id: '3', title: "Siêu thị", url: 'img/icon_3.png' },
-        { id: '4', title: "Học tập", url: 'img/icon_4.png' },
-        { id: '5', title: "Máy bay", url: 'img/icon_5.png' },
-        { id: '6', title: "Xem phim", url: 'img/icon_6.png' },
-        { id: '7', title: "Đi chợ", url: 'img/icon_7.png' },
-    ];
-
-    const transactionsByRedux = useSelector(selectorTransactions);
-    const listSpending = transactionsByRedux.listSpending;
-    console.log(listSpending[indSpending]);
-
-    const dispatch = useDispatch();
+    const revenues = [
+        { id: '1', title: "Lương về", url: 'img/icon_8.png' },
+        { id: '2', title: "Khoản thu khác", url: 'img/icon_9.png' },
+    ]
 
     const formik = useFormik({
         initialValues: {
@@ -49,52 +37,8 @@ function ModalUpdateSpending({ indSpending, changeIsReload }) {
         }),
         onSubmit: (values) => {
             console.log(values)
-            WalletService.updateSpending(
-                getTransactionId(listSpending[indSpending]),
-                {
-                    fields: {
-                        typeof: { 'stringValue': 'spending' },
-                        numberMoney: { 'integerValue': values.numberMoney },
-                        currency: listSpending[indSpending].fields.currency,
-                        img: { 'stringValue': values.img },
-                        uid: { 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid },
-                        idWallet: listSpending[indSpending].fields.idWallet
-                    }
-                }
-            )
-                .then(() => {
-                    dispatch(toggleIsOpenUpdateSpending());
-                    changeIsReload();
-                })
-                .catch()
-
-            const idWallet = listSpending[indSpending].fields.idWallet.stringValue;
-            console.log(idWallet);
-            WalletService.getWallet(idWallet)
-                .then(res => {
-                    const newTotalMoney =
-                        parseInt(res.data.fields.totalMoney.integerValue) +
-                        parseInt(listSpending[indSpending].fields.numberMoney.integerValue - values.numberMoney);
-                    WalletService.updateWallet(
-                        idWallet,
-                        {
-                            fields: {
-                                name: res.data.fields.name,
-                                totalMoney: { 'integerValue': newTotalMoney },
-                                currency: listSpending[indSpending].fields.currency,
-                                img: listSpending[indSpending].fields.img,
-                                uid: { 'arrayValue': { 'values': [{ 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }] } }
-                            }
-                        }
-                    )
-                })
-
         }
     })
-
-    const handleCloseUpdateSpending = () => {
-        dispatch(toggleIsOpenUpdateSpending())
-    }
 
     return (
         <>
@@ -151,7 +95,7 @@ function ModalUpdateSpending({ indSpending, changeIsReload }) {
                                     width: '400px'
                                 }}
                             >
-                                {spendings.map((spending, ind) => (
+                                {revenues.map((spending, ind) => (
                                     <MenuItem
                                         key={ind}
                                         value={spending.url}
@@ -212,7 +156,7 @@ function ModalUpdateSpending({ indSpending, changeIsReload }) {
                             }}
                         >
                             <Button
-                                onClick={handleCloseUpdateSpending}
+                                // onClick={handleCloseUpdateSpending}
                                 sx={{
                                     color: `${primary}`,
                                     backgroundColor: 'rgb(230, 230, 230)',
@@ -248,4 +192,4 @@ function ModalUpdateSpending({ indSpending, changeIsReload }) {
     )
 }
 
-export default ModalUpdateSpending;
+export default ModalUpdateRevenue;
