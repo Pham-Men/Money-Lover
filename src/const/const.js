@@ -1,3 +1,6 @@
+import { useDispatch } from "react-redux";
+import WalletService from "../services/wallet.service";
+
 const collectionWallets = 'my-wallets';
 const collectionTranSacTions = 'transactions';
 

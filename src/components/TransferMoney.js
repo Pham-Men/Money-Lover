@@ -55,12 +55,11 @@ function TransferMoney({changeIsReload}) {
                     values.idWalletOut,
                     {
                         fields: {
-                            name: { 'stringValue': walletOut[0].fields.name.stringValue },
+                            name: walletOut[0].fields.name,
                             totalMoney: { 'integerValue': walletOut[0].fields.totalMoney.integerValue - values.number },
-                            currency: { 'stringValue': walletOut[0].fields.currency.stringValue },
-                            img: { 'stringValue': walletOut[0].fields.img.stringValue },
-                            // uid: { 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }
-                            uid: { 'arrayValue': { 'values': [{ 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }] } }
+                            currency: walletOut[0].fields.currency,
+                            img: walletOut[0].fields.img,
+                            uid: walletOut[0].fields.uid,
                         }
                     }
                 )
@@ -72,12 +71,11 @@ function TransferMoney({changeIsReload}) {
                     values.idWalletIn,
                     {
                         fields: {
-                            name: { 'stringValue': walletIn[0].fields.name.stringValue },
+                            name:  walletIn[0].fields.name,
                             totalMoney: { 'integerValue': parseInt(walletIn[0].fields.totalMoney.integerValue) + parseInt(values.number) },
-                            currency: { 'stringValue': walletIn[0].fields.currency.stringValue },
-                            img: { 'stringValue': walletIn[0].fields.img.stringValue },
-                            // uid: { 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }
-                            uid: { 'arrayValue': { 'values': [{ 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }] } }
+                            currency: walletIn[0].fields.currency,
+                            img: walletIn[0].fields.img,
+                            uid: walletIn[0].fields.uid
                         }
                     }
                 )
@@ -132,13 +130,13 @@ function TransferMoney({changeIsReload}) {
                                 width: '160px'
                             }}
                         >
-                            {wallets.dataWallets.map(wallet => (
+                            {wallets.dataWallets.map(walletOut => (
                                 <MenuItem
-                                    value={wallet.name.split('/')[wallet.name.split('/').length - 1]}
+                                    value={walletOut.name.split('/')[walletOut.name.split('/').length - 1]}
                                 >
-                                    {wallet.fields.totalMoney.integerValue}
+                                    {walletOut.fields.totalMoney.integerValue}
                                     &nbsp;
-                                    {wallet.fields.currency.stringValue}
+                                    {walletOut.fields.currency.stringValue}
                                 </MenuItem>
                             ))}
                         </Select>
@@ -159,17 +157,22 @@ function TransferMoney({changeIsReload}) {
                                 width: '160px'
                             }}
                         >
-                            {wallets.dataWallets.filter((wallet) => (
+                            {wallets.dataWallets.length > 1 && wallets.dataWallets.filter((wallet) => (
                                 wallet.name.split('/')[wallet.name.split('/').length - 1] !== formik.values.idWalletOut
-                            )).map(idWalletIn => (
+                            )).map(walletIn => (
                                 <MenuItem
-                                    value={idWalletIn.name.split('/')[idWalletIn.name.split('/').length - 1]}
+                                    value={walletIn.name.split('/')[walletIn.name.split('/').length - 1]}
                                 >
-                                    {idWalletIn.fields.totalMoney.integerValue}
+                                    {walletIn.fields.totalMoney.integerValue}
                                     &nbsp;
-                                    {idWalletIn.fields.currency.stringValue}
+                                    {walletIn.fields.currency.stringValue}
                                 </MenuItem>
                             ))}
+                            {wallets.dataWallets.length < 2 && 
+                                <MenuItem>
+                                    No wallet
+                                </MenuItem>
+                            }
                         </Select>
                     </Box>
                     <Box

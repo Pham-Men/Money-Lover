@@ -7,7 +7,7 @@ import { bgGray, hoverGreen, primary, textGrey } from "../../const/constCSS";
 
 import { useDispatch, useSelector } from 'react-redux';
 import { selectorToggle, selectorTransactions } from '../../selector';
-import { toggleIsOpenUpdateSpending, toggleRevenue, toggleSpending } from '../../redux/slices/toggleSlice';
+import { toggleIsOpenUpdateRevenue, toggleIsOpenUpdateSpending, toggleRevenue, toggleSpending } from '../../redux/slices/toggleSlice';
 import ModalAddRevenue from '../../components/AddRevenue/AddRevenue';
 import ModalExtraSpending from '../../components/ExtraSpending/ExtraSpending';
 import { CardMedia, Grid, Typography } from '@mui/material';
@@ -18,7 +18,7 @@ import WalletService from '../../services/wallet.service';
 import { setRevenues, setSpendings } from '../../redux/slices/transactionsSlice';
 import { getTransactionId } from '../../const/const';
 import ModalUpdateSpending from '../../components/ModalUpdateSpending/ModalUpdateSpending';
-
+import ModalUpdateRevenue from '../../components/ModalUpdateRevenue/ModalUpdateRevenue';
 
 function Transactions() {
 
@@ -27,6 +27,7 @@ function Transactions() {
     const listSpending = transactionsByRedux.listSpending;
     const listRevenue = transactionsByRedux.listRevenue;
     const [indSpending, setIndSpending] = useState('');
+    const [indRevenue, setIndRevenue] = useState('');
 
     const [isReload, setIsReload] = useState(false);
     const changeIsReload = () => {
@@ -90,6 +91,15 @@ function Transactions() {
 
     const handleCloseModalUpdateSpending = () => {
         dispatch(toggleIsOpenUpdateSpending())
+    }
+
+    const handleOpenModalUpdateRevenue = (ind) => {
+        setIndRevenue(ind);
+        dispatch(toggleIsOpenUpdateRevenue())
+    }
+
+    const handleCloseModalUpdateRevenue = () => {
+        dispatch(toggleIsOpenUpdateRevenue())
     }
 
     const handleDeleteRevenue = (ind) => {
@@ -240,7 +250,7 @@ function Transactions() {
                                         </Box>
                                     </Box>
                                     <Button
-                                        // onClick={}
+                                        onClick={() => handleOpenModalUpdateRevenue(ind)}
                                         sx={{
                                             color: 'white',
                                             backgroundColor: `${primary}`,
@@ -253,6 +263,12 @@ function Transactions() {
                                     >
                                         Edit
                                     </Button>
+                                    <Modal
+                                        open={stateToggle.isOpenUpdateRevenue}
+                                        onClose={handleCloseModalUpdateRevenue}
+                                    >
+                                        <ModalUpdateRevenue/>
+                                    </Modal>
                                     <DeleteIcon
                                         onClick={() => handleDeleteRevenue(ind)}
                                         sx={{

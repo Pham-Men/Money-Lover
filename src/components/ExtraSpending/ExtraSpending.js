@@ -16,7 +16,7 @@ import WalletService from '../../services/wallet.service';
 import { setWalletsToRedux } from '../../redux/slices/walletsSlice';
 import { toggleSpending } from '../../redux/slices/toggleSlice';
 
-function ModalExtraSpending({changeIsReload}) {
+function ModalExtraSpending({ changeIsReload }) {
 
     const spendings = [
         { id: '1', title: "Sức khỏe", url: 'img/icon_1.png' },
@@ -28,19 +28,18 @@ function ModalExtraSpending({changeIsReload}) {
         { id: '7', title: "Đi chợ", url: 'img/icon_7.png' },
     ];
 
-
     const walletsByRedux = useSelector(selectorWallets);
 
     const dispatch = useDispatch();
 
     const formik = useFormik({
         initialValues: {
-            category: '',
+            url: '',
             numberMoney: '',
             idWallet: ''
         },
         validationSchema: Yup.object({
-            category: Yup
+            url: Yup
                 .string()
                 .required('Required'),
             numberMoney: Yup
@@ -55,7 +54,7 @@ function ModalExtraSpending({changeIsReload}) {
             console.log(values)
             WalletService.getWallet(values.idWallet)
                 .then((res) => {
-                    console.log(res.data.fields.img.stringValue)
+                    console.log(res)
                     const newTotalMoney = res.data.fields.totalMoney.integerValue - values.numberMoney;
                     if (newTotalMoney >= 0) {
                         WalletService.addTransaction(
@@ -70,11 +69,11 @@ function ModalExtraSpending({changeIsReload}) {
                                 }
                             }
                         )
-                        .then(() => {
-                            alert('added successful transaction')
-                            changeIsReload()
-                        })
-                        .catch()
+                            .then(() => {
+                                alert('added successful transaction')
+                                changeIsReload()
+                            })
+                            .catch()
                         WalletService.updateWallet(
                             values.idWallet,
                             {
@@ -82,7 +81,7 @@ function ModalExtraSpending({changeIsReload}) {
                                     name: { 'stringValue': res.data.fields.name.stringValue },
                                     totalMoney: { 'integerValue': newTotalMoney },
                                     currency: { 'stringValue': res.data.fields.currency.stringValue },
-                                    img: { 'stringValue': res.data.fields.img.stringValue },
+                                    img: res.data.fields.img,
                                     uid: { 'arrayValue': { 'values': [{ 'stringValue': JSON.parse(localStorage.getItem('userAuth')).uid }] } }
                                 }
                             }
@@ -104,7 +103,7 @@ function ModalExtraSpending({changeIsReload}) {
                         alert('Budget is not enough')
                     }
                 })
-                dispatch(toggleSpending())
+            dispatch(toggleSpending())
         }
     });
 
@@ -159,10 +158,10 @@ function ModalExtraSpending({changeIsReload}) {
                             </Typography>
                             <Select
                                 onChange={formik.handleChange}
-                                name='category'
-                                value={formik.values.category}
-                                error={formik.touched.category && Boolean(formik.errors.category)}
-                                helperText={formik.touched.category && formik.errors.category}
+                                name='url'
+                                value={formik.values.url}
+                                error={formik.touched.url && Boolean(formik.errors.url)}
+                                helperText={formik.touched.url && formik.errors.url}
                                 sx={{
                                     width: '400px'
                                 }}
